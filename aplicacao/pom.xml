@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>dev.beckerhealth</groupId>
+        <artifactId>beckerhealth-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>aplicacao</artifactId>
+    <packaging>jar</packaging>
+    <name>Aplicação</name>
+    <description>Camada de Aplicação - Casos de Uso e DTOs</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>dev.beckerhealth</groupId>
+            <artifactId>dominio-compartilhado</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.beckerhealth</groupId>
+            <artifactId>dominio-consultas</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.beckerhealth</groupId>
+            <artifactId>dominio-prontuario</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.beckerhealth</groupId>
+            <artifactId>dominio-notificacao</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.beckerhealth</groupId>
+            <artifactId>dominio-relatorios</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
+
