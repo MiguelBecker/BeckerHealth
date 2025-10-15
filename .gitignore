@@ -1,0 +1,48 @@
+
+# target/
+# pom.xml.tag
+# pom.xml.releaseBackup
+# pom.xml.versionsBackup
+# pom.xml.next
+# release.properties
+# dependency-reduced-pom.xml
+# buildNumber.properties
+# .mvn/timing.properties
+# .mvn/wrapper/maven-wrapper.jar
+
+
+# .idea/
+# *.iml
+# *.iws
+# *.ipr
+# .vscode/
+# .settings/
+# .classpath
+# .project
+# .factorypath
+
+# *.log
+# *.log.*
+
+# *.db
+# *.trace.db
+
+# .DS_Store
+# Thumbs.db
+
+
+# node_modules/
+# frontend/
+# node/
+
+
+# dist/
+# build/
+
+
+# *.tmp
+# *.temp
+# *.swp
+# *.bak
+# *~
+
