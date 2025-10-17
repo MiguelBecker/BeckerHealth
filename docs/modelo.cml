@@ -1,0 +1,57 @@
+ContextMap {
+    boundedContext dominio-compartilhado
+    boundedContext dominio-consultas
+    boundedContext dominio-prontuario
+
+    // Consultas e Prontuário dependem do Compartilhado
+    dominio-consultas -> dominio-compartilhado
+    dominio-prontuario -> dominio-compartilhado
+
+    // Relacionamento direto entre Consultas e Prontuário
+    dominio-prontuario -> dominio-consultas
+}
+
+BoundedContext dominio-compartilhado {
+    Aggregate Usuario {
+        Entity Medico {
+            - id : Long
+            - nome : String
+            - crm : String
+        }
+        Entity Paciente {
+            - id : Long
+            - nome : String
+            - cpf : String
+        }
+    }
+}
+
+BoundedContext dominio-consultas {
+    Aggregate Consulta {
+        Entity Consulta {
+            - id : Long
+            - paciente : Paciente
+            - medico : Medico
+            - dataConsulta : LocalDate
+            - horaConsulta : LocalTime
+            - tipo : TipoConsulta (ROTINA, RETORNO, URGENCIA)
+            - status : StatusConsulta (AGENDADA, CONCLUIDA, CANCELADA)
+        }
+    }
+}
+
+BoundedContext dominio-prontuario {
+    Aggregate Prontuario {
+        Entity Prontuario {
+            - id : Long
+            - paciente : Paciente
+            - medicoResponsavel : Medico
+            - anamnese : String
+            - diagnostico : String
+            - prescricao : String
+            - dataAtendimento : LocalDateTime
+            - tipoAtendimento : TipoAtendimento (CONSULTA, RETORNO, URGENCIA, EMERGENCIA)
+            - observacoes : String
+        }
+    }
+}

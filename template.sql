@@ -1,4 +1,6 @@
+-- ===========================
 -- Cria o banco de dados
+-- ===========================
 create database if not exists SistemaSaude;
 use SistemaSaude;
 
@@ -52,16 +54,21 @@ create table if not exists Consulta (
 );
 
 -- ===========================
--- Tabela Prontuario
+-- Tabela Prontuario (versão simplificada)
 -- ===========================
 create table if not exists Prontuario (
     id int not null auto_increment,
-    id_consulta int not null,
+    id_paciente int not null,
+    id_medico int not null,
+    anamnese text not null,
     diagnostico text,
     prescricao text,
+    data_atendimento datetime not null,
+    tipo_atendimento enum('CONSULTA','RETORNO','URGENCIA','EMERGENCIA') not null,
     observacoes text,
     primary key (id),
-    foreign key (id_consulta) references Consulta(id)
+    foreign key (id_paciente) references Paciente(id),
+    foreign key (id_medico) references Medico(id)
 );
 
 -- ===========================
