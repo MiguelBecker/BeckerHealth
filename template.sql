@@ -103,9 +103,21 @@ create table if not exists Receita (
 create table if not exists Notificacao (
     id int not null auto_increment,
     id_usuario int not null,
-    mensagem varchar(255) not null,
+    titulo varchar(200) not null,
+    mensagem text not null,
     data_envio datetime not null,
-    canal enum('EMAIL', 'SMS', 'APP') default 'EMAIL',
+    data_leitura datetime,
+    tipo enum(
+        'CONSULTA_AGENDADA',
+        'CONSULTA_CANCELADA',
+        'CONSULTA_REMARCADA',
+        'RESULTADO_EXAME',
+        'PRESCRICAO',
+        'LEMBRETE',
+        'ALERTA'
+    ) not null,
+    status enum('NAO_LIDA', 'LIDA', 'ARQUIVADA') not null default 'NAO_LIDA',
+    link varchar(500),
     primary key (id),
     foreign key (id_usuario) references Usuario(id)
 );

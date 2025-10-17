@@ -5,21 +5,17 @@ import java.util.List;
 import java.util.Optional;
 
 public interface NotificacaoRepository {
-
     Notificacao salvar(Notificacao notificacao);
 
     Optional<Notificacao> buscarPorId(Long id);
 
     List<Notificacao> listarTodas();
 
-    List<Notificacao> buscarPorDestinatario(Long usuarioId);
+    List<Notificacao> buscarPorDestinatario(Long destinatarioId);
 
-    List<Notificacao> buscarNaoLidasPorDestinatario(Long usuarioId);
+    List<Notificacao> buscarNaoLidasPorDestinatario(Long destinatarioId);
 
-    List<Notificacao> buscarPorTipo(Notificacao.TipoNotificacao tipo);
-
-    List<Notificacao> buscarPorPeriodo(LocalDateTime dataInicio, LocalDateTime dataFim);
+    List<Notificacao> buscarPorPeriodo(LocalDateTime inicio, LocalDateTime fim);
 
     void deletar(Long id);
 }
-
