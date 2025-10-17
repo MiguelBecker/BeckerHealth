@@ -56,4 +56,3 @@ public class Notificacao {
         this.dataLeitura = LocalDateTime.now();
     }
 }
-
