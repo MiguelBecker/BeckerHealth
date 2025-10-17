@@ -47,4 +47,3 @@ public class Prontuario {
         CONSULTA, RETORNO, URGENCIA, EMERGENCIA
     }
 }
-
