@@ -36,14 +36,14 @@ public class NotificacaoSteps {
         service.enviarNotificacao(notif);
     }
 
-    @Então("o paciente deve receber a notificação com mensagem {string}")
+    @Entao("o paciente deve receber a notificação com mensagem {string}")
     public void paciente_recebe_notificacao(String msgEsperada) {
         notificacoes = service.listarPorDestinatario(paciente.getId());
         assertThat(notificacoes).isNotEmpty();
         assertThat(notificacoes.get(0).getMensagem()).isEqualTo(msgEsperada);
     }
 
-    @Então("a notificação deve estar marcada como não lida")
+    @Entao("a notificação deve estar marcada como não lida")
     public void notificacao_nao_lida() {
         assertThat(notificacoes.get(0).getStatus()).isEqualTo(Notificacao.StatusNotificacao.NAO_LIDA);
     }

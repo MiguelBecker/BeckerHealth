@@ -35,7 +35,6 @@ public interface ProntuarioRepositoryJpa extends JpaRepository<Prontuario, Long>
         return findByPacienteId(pacienteId);
     }
 
-    @Override
     List<Prontuario> findByMedicoResponsavelId(Long medicoId);
 
     @Override

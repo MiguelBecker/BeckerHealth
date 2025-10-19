@@ -43,7 +43,6 @@ public interface ConsultaRepositoryJpa extends JpaRepository<Consulta, Long>, Co
         return findByStatus(status);
     }
 
-    @Override
     List<Consulta> findByPacienteId(Long pacienteId);
 
     @Override
@@ -51,7 +50,6 @@ public interface ConsultaRepositoryJpa extends JpaRepository<Consulta, Long>, Co
         return findByPacienteId(pacienteId);
     }
 
-    @Override
     List<Consulta> findByMedicoId(Long medicoId);
 
     @Override
