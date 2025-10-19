@@ -35,7 +35,6 @@ public interface NotificacaoRepositoryJpa extends JpaRepository<Notificacao, Lon
         return findByDestinatarioId(usuarioId);
     }
 
-    @Override
     List<Notificacao> findByDestinatarioIdAndStatus(Long usuarioId, Notificacao.StatusNotificacao status);
 
     @Override
