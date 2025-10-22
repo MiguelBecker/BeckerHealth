@@ -195,13 +195,13 @@ dev.beckerhealth
 
 ---
 
-## 👥 Desenvolvido por
+## 👥 Desenvolvido por:
+
+Miguel Becker
+Renato Santana
 
 Projeto desenvolvido para a disciplina de Requisitos de Software.
 
-**Bounded Contexts Implementados:**
-- ✅ Consultas
-- ✅ Prontuário
-- ✅ Notificação
-- ✅ Relatórios
+## Link Google Drive:
+https://drive.google.com/drive/folders/119OePRLB4WBG1fZfUztqTmSsplpsi2I9?usp=sharing
 
