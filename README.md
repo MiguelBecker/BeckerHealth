@@ -197,8 +197,7 @@ dev.beckerhealth
 
 ## 👥 Desenvolvido por:
 
-Miguel Becker
-Renato Santana
+Miguel Becker e Renato Santana
 
 Projeto desenvolvido para a disciplina de Requisitos de Software.
 
