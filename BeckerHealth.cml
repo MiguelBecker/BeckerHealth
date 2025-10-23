@@ -1,0 +1,161 @@
+Domain BeckerHealth {}
+
+BoundedContext DominioCompartilhado implements BeckerHealth {
+
+    Aggregate Usuario {
+        Entity Usuario {
+            aggregateRoot
+            Long id
+            String nome
+            String emailAddress
+            String tipo
+        }
+
+        Entity Medico {
+            Long id
+            String nome
+            String crm
+            String especialidade
+        }
+
+        Entity Paciente {
+            Long id
+            String nome
+            String cpf
+            Date dataNascimento
+            String convenio
+        }
+    }
+}
+
+BoundedContext DominioConsultas implements BeckerHealth {
+
+    Aggregate Consulta {
+        Entity Consulta {
+            aggregateRoot
+            Long id
+            Long pacienteId
+            Long medicoId
+            Date dataConsulta
+            String horaConsulta
+            String tipo
+            String status
+        }
+
+        Repository ConsultaRepository {
+            salvar(Consulta consulta)
+            List<Consulta> listarTodas()
+            List<Consulta> buscarPorPaciente(Long pacienteId)
+            List<Consulta> buscarPorMedico(Long medicoId)
+        }
+
+        Service GestaoConsultasService {
+            Consulta agendarConsulta(Long pacienteId, Long medicoId, Date data, String hora, String tipo)
+            cancelarConsulta(Long consultaId)
+            concluirConsulta(Long consultaId)
+        }
+    }
+}
+
+BoundedContext DominioProntuario implements BeckerHealth {
+
+    Aggregate Prontuario {
+        Entity Prontuario {
+            aggregateRoot
+            Long id
+            Long pacienteId
+            Long medicoResponsavelId
+            String anamnese
+            String diagnostico
+            String prescricao
+            Date dataAtendimento
+            String tipoAtendimento
+            String observacoes
+        }
+
+        Repository ProntuarioRepository {
+            salvar(Prontuario prontuario)
+            Prontuario buscarPorId(Long id)
+            List<Prontuario> listarTodos()
+        }
+
+        Service ProntuarioService {
+            Prontuario registrarAtendimento(Long pacienteId, Long medicoId, String diagnostico, String prescricao)
+            List<Prontuario> listarPorPeriodo(Date inicio, Date fim)
+        }
+    }
+}
+
+BoundedContext DominioNotificacao implements BeckerHealth {
+
+    Aggregate Notificacao {
+        Entity Notificacao {
+            aggregateRoot
+            Long id
+            Long destinatarioId
+            String titulo
+            String mensagem
+            Date dataEnvio
+            Date dataLeitura
+            String tipo
+            String status
+            String link
+        }
+
+        Repository NotificacaoRepository {
+            salvar(Notificacao notificacao)
+            List<Notificacao> listarPorUsuario(Long usuarioId)
+            List<Notificacao> listarNaoLidas(Long usuarioId)
+        }
+
+        Service NotificacaoService {
+            Notificacao enviarNotificacao(Long usuarioId, String titulo, String mensagem, String tipo)
+            marcarComoLida(Long notificacaoId)
+        }
+    }
+}
+
+BoundedContext DominioRelatorios implements BeckerHealth {
+
+    Aggregate Relatorio {
+        Entity Relatorio {
+            aggregateRoot
+            Long id
+            String titulo
+            String conteudo
+            String tipo
+            Long geradoPorId
+            Date dataGeracao
+            String status
+            String observacoes
+        }
+
+        Repository RelatorioRepository {
+            salvar(Relatorio relatorio)
+            List<Relatorio> buscarPorTipo(String tipo)
+            List<Relatorio> buscarPorPeriodo(Date inicio, Date fim)
+        }
+
+        Service RelatorioService {
+            Relatorio gerarRelatorio(String tipo)
+            List<Relatorio> listarRelatorios()
+        }
+    }
+}
+
+ContextMap BeckerHealthContextMap {
+    contains DominioCompartilhado, DominioConsultas, DominioProntuario, DominioNotificacao, DominioRelatorios
+
+    DominioConsultas -> DominioCompartilhado
+    DominioProntuario -> DominioCompartilhado
+    DominioNotificacao -> DominioCompartilhado
+    DominioRelatorios -> DominioCompartilhado
+
+    DominioProntuario -> DominioConsultas
+    DominioNotificacao -> DominioConsultas
+    DominioNotificacao -> DominioProntuario
+
+    DominioRelatorios -> DominioConsultas
+    DominioRelatorios -> DominioProntuario
+    DominioRelatorios -> DominioNotificacao
+}
