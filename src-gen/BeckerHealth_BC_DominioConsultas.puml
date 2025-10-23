@@ -1,0 +1,18 @@
+@startuml
+
+skinparam componentStyle uml2
+
+package "'Consulta' Aggregate" <<Rectangle>> {
+	class Consulta <<(A,#fffab8) Aggregate Root>> {
+		Long id
+		Long pacienteId
+		Long medicoId
+		Date dataConsulta
+		String horaConsulta
+		String tipo
+		String status
+	}
+}
+
+
+@enduml
