@@ -40,19 +40,19 @@ BoundedContext DominioConsultas implements BeckerHealth {
             String horaConsulta
             String tipo
             String status
-        }
 
         Repository ConsultaRepository {
-            salvar(Consulta consulta)
-            List<Consulta> listarTodas()
-            List<Consulta> buscarPorPaciente(Long pacienteId)
-            List<Consulta> buscarPorMedico(Long medicoId)
+            salvar(@Consulta consulta);
+            List<@Consulta> listarTodas();
+            List<@Consulta> buscarPorPaciente(Long pacienteId);
+            List<@Consulta> buscarPorMedico(Long medicoId);
+            }
         }
 
         Service GestaoConsultasService {
-            Consulta agendarConsulta(Long pacienteId, Long medicoId, Date data, String hora, String tipo)
-            cancelarConsulta(Long consultaId)
-            concluirConsulta(Long consultaId)
+            agendarConsulta(Long pacienteId, Long medicoId, Date data, String hora, String tipo);
+            cancelarConsulta(Long consultaId);
+            concluirConsulta(Long consultaId);
         }
     }
 }
@@ -71,17 +71,19 @@ BoundedContext DominioProntuario implements BeckerHealth {
             Date dataAtendimento
             String tipoAtendimento
             String observacoes
+
+            Repository ProntuarioRepository {
+                salvar(@Prontuario prontuario);
+                buscarPorId(Long id);
+                List<@Prontuario> listarTodos();
+            }
         }
 
-        Repository ProntuarioRepository {
-            salvar(Prontuario prontuario)
-            Prontuario buscarPorId(Long id)
-            List<Prontuario> listarTodos()
-        }
+
 
         Service ProntuarioService {
-            Prontuario registrarAtendimento(Long pacienteId, Long medicoId, String diagnostico, String prescricao)
-            List<Prontuario> listarPorPeriodo(Date inicio, Date fim)
+            registrarAtendimento(Long pacienteId, Long medicoId, String diagnostico, String prescricao);
+            List<@Prontuario> listarPorPeriodo(Date inicio, Date fim);
         }
     }
 }
@@ -100,17 +102,17 @@ BoundedContext DominioNotificacao implements BeckerHealth {
             String tipo
             String status
             String link
-        }
 
-        Repository NotificacaoRepository {
-            salvar(Notificacao notificacao)
-            List<Notificacao> listarPorUsuario(Long usuarioId)
-            List<Notificacao> listarNaoLidas(Long usuarioId)
+            Repository NotificacaoRepository {
+                salvar(@Notificacao notificacao);
+                List<@Notificacao> listarPorUsuario(Long usuarioId);
+                List<@Notificacao> listarNaoLidas(Long usuarioId);
+            }
         }
 
         Service NotificacaoService {
-            Notificacao enviarNotificacao(Long usuarioId, String titulo, String mensagem, String tipo)
-            marcarComoLida(Long notificacaoId)
+            enviarNotificacao(Long usuarioId, String titulo, String mensagem, String tipo);
+            marcarComoLida(Long notificacaoId);
         }
     }
 }
@@ -128,17 +130,17 @@ BoundedContext DominioRelatorios implements BeckerHealth {
             Date dataGeracao
             String status
             String observacoes
-        }
 
-        Repository RelatorioRepository {
-            salvar(Relatorio relatorio)
-            List<Relatorio> buscarPorTipo(String tipo)
-            List<Relatorio> buscarPorPeriodo(Date inicio, Date fim)
+            Repository RelatorioRepository {
+                salvar(@Relatorio relatorio);
+                List<@Relatorio> buscarPorTipo(String tipo);
+                List<@Relatorio> buscarPorPeriodo(Date inicio, Date fim);
+            }
         }
 
         Service RelatorioService {
-            Relatorio gerarRelatorio(String tipo)
-            List<Relatorio> listarRelatorios()
+            gerarRelatorio(String tipo);
+            List<@Relatorio> listarRelatorios();
         }
     }
 }

@@ -1,0 +1,23 @@
+@startuml
+
+skinparam componentStyle uml2
+
+package "'Relatorio' Aggregate" <<Rectangle>> {
+	class Relatorio <<(A,#fffab8) Aggregate Root>> {
+		Long id
+		String titulo
+		String conteudo
+		String tipo
+		Long geradoPorId
+		Date dataGeracao
+		String status
+		String observacoes
+	}
+	class RelatorioService <<(S,DarkSeaGreen) Service>> {
+		void gerarRelatorio(String tipo)
+		List<Relatorio> listarRelatorios()
+	}
+}
+
+
+@enduml

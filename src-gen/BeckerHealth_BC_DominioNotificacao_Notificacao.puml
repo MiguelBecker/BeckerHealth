@@ -1,0 +1,24 @@
+@startuml
+
+skinparam componentStyle uml2
+
+package "'Notificacao' Aggregate" <<Rectangle>> {
+	class Notificacao <<(A,#fffab8) Aggregate Root>> {
+		Long id
+		Long destinatarioId
+		String titulo
+		String mensagem
+		Date dataEnvio
+		Date dataLeitura
+		String tipo
+		String status
+		String link
+	}
+	class NotificacaoService <<(S,DarkSeaGreen) Service>> {
+		void enviarNotificacao(Long usuarioId, String titulo, String mensagem, String tipo)
+		void marcarComoLida(Long notificacaoId)
+	}
+}
+
+
+@enduml

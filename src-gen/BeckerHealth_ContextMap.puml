@@ -1,0 +1,53 @@
+@startuml
+
+skinparam componentStyle uml2
+
+component [DominioCompartilhado]
+component [DominioConsultas]
+component [DominioProntuario]
+component [DominioNotificacao]
+component [DominioRelatorios]
+
+interface "Upstream-Downstream" as DominioCompartilhado_to_DominioConsultas
+[DominioConsultas] --> DominioCompartilhado_to_DominioConsultas
+DominioCompartilhado_to_DominioConsultas <.. [DominioCompartilhado] : consume
+
+interface "Upstream-Downstream" as DominioCompartilhado_to_DominioProntuario
+[DominioProntuario] --> DominioCompartilhado_to_DominioProntuario
+DominioCompartilhado_to_DominioProntuario <.. [DominioCompartilhado] : consume
+
+interface "Upstream-Downstream" as DominioCompartilhado_to_DominioNotificacao
+[DominioNotificacao] --> DominioCompartilhado_to_DominioNotificacao
+DominioCompartilhado_to_DominioNotificacao <.. [DominioCompartilhado] : consume
+
+interface "Upstream-Downstream" as DominioCompartilhado_to_DominioRelatorios
+[DominioRelatorios] --> DominioCompartilhado_to_DominioRelatorios
+DominioCompartilhado_to_DominioRelatorios <.. [DominioCompartilhado] : consume
+
+interface "Upstream-Downstream" as DominioConsultas_to_DominioProntuario
+[DominioProntuario] --> DominioConsultas_to_DominioProntuario
+DominioConsultas_to_DominioProntuario <.. [DominioConsultas] : consume
+
+interface "Upstream-Downstream" as DominioConsultas_to_DominioNotificacao
+[DominioNotificacao] --> DominioConsultas_to_DominioNotificacao
+DominioConsultas_to_DominioNotificacao <.. [DominioConsultas] : consume
+
+interface "Upstream-Downstream" as DominioProntuario_to_DominioNotificacao
+[DominioNotificacao] --> DominioProntuario_to_DominioNotificacao
+DominioProntuario_to_DominioNotificacao <.. [DominioProntuario] : consume
+
+interface "Upstream-Downstream" as DominioConsultas_to_DominioRelatorios
+[DominioRelatorios] --> DominioConsultas_to_DominioRelatorios
+DominioConsultas_to_DominioRelatorios <.. [DominioConsultas] : consume
+
+interface "Upstream-Downstream" as DominioProntuario_to_DominioRelatorios
+[DominioRelatorios] --> DominioProntuario_to_DominioRelatorios
+DominioProntuario_to_DominioRelatorios <.. [DominioProntuario] : consume
+
+interface "Upstream-Downstream" as DominioNotificacao_to_DominioRelatorios
+[DominioRelatorios] --> DominioNotificacao_to_DominioRelatorios
+DominioNotificacao_to_DominioRelatorios <.. [DominioNotificacao] : consume
+
+
+
+@enduml

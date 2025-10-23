@@ -12,6 +12,11 @@ package "'Consulta' Aggregate" <<Rectangle>> {
 		String tipo
 		String status
 	}
+	class GestaoConsultasService <<(S,DarkSeaGreen) Service>> {
+		void agendarConsulta(Long pacienteId, Long medicoId, Date data, String hora, String tipo)
+		void cancelarConsulta(Long consultaId)
+		void concluirConsulta(Long consultaId)
+	}
 }
 
 
