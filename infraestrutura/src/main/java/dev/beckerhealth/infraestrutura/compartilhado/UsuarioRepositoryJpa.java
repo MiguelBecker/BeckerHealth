@@ -23,4 +23,3 @@ public interface MedicoRepositoryJpa extends JpaRepository<Medico, Long> {
 public interface PacienteRepositoryJpa extends JpaRepository<Paciente, Long> {
     Optional<Paciente> findByCpf(String cpf);
 }
-
