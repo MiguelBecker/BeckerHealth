@@ -7,8 +7,9 @@
 
     <parent>
         <groupId>dev.beckerhealth</groupId>
-        <artifactId>beckerhealth-parent</artifactId>
+        <artifactId>beckerhealth-pai</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pai</relativePath>
     </parent>
 
     <artifactId>dominio-prontuario</artifactId>

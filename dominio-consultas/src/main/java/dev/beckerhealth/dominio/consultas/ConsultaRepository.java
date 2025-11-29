@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface ConsultaRepository {
     Consulta salvar(Consulta consulta);
 
-    Optional<Consulta> buscarPorId(Long id);
+    Optional<Consulta> buscarPorId(ConsultaId id);
 
     List<Consulta> listarTodas();
 
@@ -19,6 +19,6 @@ public interface ConsultaRepository {
 
     List<Consulta> buscarPorMedico(Long medicoId);
 
-    void deletar(Long id);
+    void deletar(ConsultaId id);
 }
 

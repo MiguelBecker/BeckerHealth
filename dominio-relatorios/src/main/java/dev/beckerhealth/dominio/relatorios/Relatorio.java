@@ -1,44 +1,111 @@
 package dev.beckerhealth.dominio.relatorios;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 import dev.beckerhealth.dominio.compartilhado.usuario.Usuario;
-import jakarta.persistence.*;
-import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "relatorios")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Relatorio {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false, length = 200)
     private String titulo;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
     private String conteudo;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private TipoRelatorio tipo;
-
-    @ManyToOne
     private Usuario geradoPor;
-
-    @Column(nullable = false)
     private LocalDateTime dataGeracao;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private StatusRelatorio status = StatusRelatorio.GERADO;
-
-    @Column(length = 500)
     private String observacoes;
+
+    public Relatorio() {
+    }
+
+    public Relatorio(Long id, String titulo, String conteudo, TipoRelatorio tipo,
+                     Usuario geradoPor, LocalDateTime dataGeracao, StatusRelatorio status,
+                     String observacoes) {
+        notNull(titulo, "O título não pode ser nulo");
+        notNull(conteudo, "O conteúdo não pode ser nulo");
+        notNull(tipo, "O tipo não pode ser nulo");
+        notNull(dataGeracao, "A data de geração não pode ser nula");
+        notNull(status, "O status não pode ser nulo");
+        
+        this.id = id;
+        this.titulo = titulo;
+        this.conteudo = conteudo;
+        this.tipo = tipo;
+        this.geradoPor = geradoPor;
+        this.dataGeracao = dataGeracao;
+        this.status = status;
+        this.observacoes = observacoes;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        notNull(titulo, "O título não pode ser nulo");
+        this.titulo = titulo;
+    }
+
+    public String getConteudo() {
+        return conteudo;
+    }
+
+    public void setConteudo(String conteudo) {
+        notNull(conteudo, "O conteúdo não pode ser nulo");
+        this.conteudo = conteudo;
+    }
+
+    public TipoRelatorio getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoRelatorio tipo) {
+        notNull(tipo, "O tipo não pode ser nulo");
+        this.tipo = tipo;
+    }
+
+    public Usuario getGeradoPor() {
+        return geradoPor;
+    }
+
+    public void setGeradoPor(Usuario geradoPor) {
+        this.geradoPor = geradoPor;
+    }
+
+    public LocalDateTime getDataGeracao() {
+        return dataGeracao;
+    }
+
+    public void setDataGeracao(LocalDateTime dataGeracao) {
+        notNull(dataGeracao, "A data de geração não pode ser nula");
+        this.dataGeracao = dataGeracao;
+    }
+
+    public StatusRelatorio getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusRelatorio status) {
+        notNull(status, "O status não pode ser nulo");
+        this.status = status;
+    }
+
+    public String getObservacoes() {
+        return observacoes;
+    }
+
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
+    }
 
     public enum TipoRelatorio {
         CONSULTAS_POR_PERIODO, CONSULTAS_POR_MEDICO, CONSULTAS_POR_PACIENTE,

@@ -1,8 +1,11 @@
 package dev.beckerhealth.apresentacao.backend.consultas;
 
 import dev.beckerhealth.aplicacao.consultas.AgendarConsulta;
+import dev.beckerhealth.aplicacao.consultas.ConsultaServicoAplicacao;
 import dev.beckerhealth.aplicacao.consultas.dto.ConsultaResumo;
+import dev.beckerhealth.aplicacao.consultas.dto.ConsultaResumoExpandido;
 import dev.beckerhealth.dominio.consultas.Consulta;
+import dev.beckerhealth.dominio.consultas.ConsultaId;
 import dev.beckerhealth.dominio.consultas.ConsultaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,16 +20,22 @@ import java.util.List;
 public class ConsultaController {
 
     private final ConsultaRepository consultaRepository;
+    private final ConsultaServicoAplicacao consultaServicoAplicacao;
     private final AgendarConsulta agendarConsulta;
 
     @GetMapping
-    public List<Consulta> listarTodas() {
-        return consultaRepository.listarTodas();
+    public List<ConsultaResumo> listarTodas() {
+        return consultaServicoAplicacao.pesquisarResumos();
+    }
+
+    @GetMapping("/expandido")
+    public List<ConsultaResumoExpandido> listarTodasExpandidas() {
+        return consultaServicoAplicacao.pesquisarResumosExpandidos();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Consulta> buscarPorId(@PathVariable Long id) {
-        return consultaRepository.buscarPorId(id)
+        return consultaRepository.buscarPorId(new ConsultaId(id))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -37,14 +46,17 @@ public class ConsultaController {
     }
 
     @PostMapping
-    public ResponseEntity<ConsultaResumo> agendar(@RequestBody AgendarConsultaForm form) {
+    public ResponseEntity<ConsultaResumo> agendar(@RequestBody AgendarConsultaForm.ConsultaDto dto) {
         try {
+            if (dto == null) {
+                return ResponseEntity.badRequest().build();
+            }
             ConsultaResumo consulta = agendarConsulta.executar(
-                    form.getPacienteId(),
-                    form.getMedicoId(),
-                    form.getDataConsulta(),
-                    form.getHoraConsulta(),
-                    form.getTipo()
+                    dto.pacienteId,
+                    dto.medicoId,
+                    dto.dataConsulta,
+                    dto.horaConsulta,
+                    dto.tipo
             );
             return ResponseEntity.ok(consulta);
         } catch (IllegalArgumentException e) {
@@ -54,7 +66,7 @@ public class ConsultaController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        consultaRepository.deletar(id);
+        consultaRepository.deletar(new ConsultaId(id));
         return ResponseEntity.noContent().build();
     }
 }

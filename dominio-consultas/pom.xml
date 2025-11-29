@@ -7,8 +7,9 @@
 
     <parent>
         <groupId>dev.beckerhealth</groupId>
-        <artifactId>beckerhealth-parent</artifactId>
+        <artifactId>beckerhealth-pai</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pai</relativePath>
     </parent>
 
     <artifactId>dominio-consultas</artifactId>
@@ -34,6 +35,12 @@
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
+        </dependency>
+
+        <!-- Commons Lang -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <!-- =================== -->

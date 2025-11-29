@@ -15,6 +15,8 @@ public interface NotificacaoRepository {
 
     List<Notificacao> buscarNaoLidasPorDestinatario(Long destinatarioId);
 
+    List<Notificacao> buscarPorTipo(TipoNotificacao tipo);
+
     List<Notificacao> buscarPorPeriodo(LocalDateTime inicio, LocalDateTime fim);
 
     void deletar(Long id);

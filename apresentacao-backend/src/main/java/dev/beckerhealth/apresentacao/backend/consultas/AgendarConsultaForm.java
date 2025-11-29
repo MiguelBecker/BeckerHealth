@@ -1,28 +1,27 @@
 package dev.beckerhealth.apresentacao.backend.consultas;
 
-import dev.beckerhealth.dominio.consultas.Consulta;
-import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import dev.beckerhealth.aplicacao.consultas.dto.ConsultaResumo;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.List;
 
-@Data
 public class AgendarConsultaForm {
+    public ConsultaDto consulta;
+    public List<ConsultaResumo> consultasExistentes;
 
-    @NotNull
-    private Long pacienteId;
+    public AgendarConsultaForm(ConsultaDto consulta, List<ConsultaResumo> consultasExistentes) {
+        this.consulta = consulta;
+        this.consultasExistentes = consultasExistentes;
+    }
 
-    @NotNull
-    private Long medicoId;
+    public AgendarConsultaForm() {
+        this.consulta = new ConsultaDto();
+    }
 
-    @NotNull
-    private LocalDate dataConsulta;
-
-    @NotNull
-    private LocalTime horaConsulta;
-
-    @NotNull
-    private Consulta.TipoConsulta tipo;
+    public static class ConsultaDto {
+        public Long pacienteId;
+        public Long medicoId;
+        public java.time.LocalDate dataConsulta;
+        public java.time.LocalTime horaConsulta;
+        public dev.beckerhealth.dominio.consultas.Consulta.TipoConsulta tipo;
+    }
 }
-
