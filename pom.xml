@@ -13,6 +13,7 @@
     <description>Sistema de Gestão Hospitalar - Arquitetura DDD Multi-módulo</description>
 
     <modules>
+        <module>pai</module>
         <module>dominio-compartilhado</module>
         <module>dominio-consultas</module>
         <module>dominio-prontuario</module>

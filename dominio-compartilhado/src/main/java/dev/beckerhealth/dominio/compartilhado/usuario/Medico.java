@@ -1,20 +1,40 @@
 package dev.beckerhealth.dominio.compartilhado.usuario;
 
-import jakarta.persistence.*;
-import lombok.*;
+import static org.apache.commons.lang3.Validate.notNull;
 
-@Entity
-@Table(name = "medicos")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 public class Medico extends Usuario {
-
-    @Column(unique = true, nullable = false, length = 20)
-    private String crm;
-
-    @Column(nullable = false, length = 100)
+    private Crm crm;
     private String especialidade;
+
+    public Medico() {
+        super();
+    }
+
+    public Medico(Long id, String login, String senha, String nome, Email email, 
+                   TipoUsuario tipo, Crm crm, String especialidade) {
+        super(id, login, senha, nome, email, tipo);
+        notNull(crm, "O CRM não pode ser nulo");
+        notNull(especialidade, "A especialidade não pode ser nula");
+        this.crm = crm;
+        this.especialidade = especialidade;
+    }
+
+    public Crm getCrm() {
+        return crm;
+    }
+
+    public void setCrm(Crm crm) {
+        notNull(crm, "O CRM não pode ser nulo");
+        this.crm = crm;
+    }
+
+    public String getEspecialidade() {
+        return especialidade;
+    }
+
+    public void setEspecialidade(String especialidade) {
+        notNull(especialidade, "A especialidade não pode ser nula");
+        this.especialidade = especialidade;
+    }
 }
 

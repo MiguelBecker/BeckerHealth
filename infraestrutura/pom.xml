@@ -7,8 +7,9 @@
 
     <parent>
         <groupId>dev.beckerhealth</groupId>
-        <artifactId>beckerhealth-parent</artifactId>
+        <artifactId>beckerhealth-pai</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pai</relativePath>
     </parent>
 
     <artifactId>infraestrutura</artifactId>
@@ -17,6 +18,11 @@
     <description>Camada de Infraestrutura - Implementações técnicas</description>
 
     <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>aplicacao</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>dev.beckerhealth</groupId>
             <artifactId>dominio-compartilhado</artifactId>
@@ -65,6 +71,27 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

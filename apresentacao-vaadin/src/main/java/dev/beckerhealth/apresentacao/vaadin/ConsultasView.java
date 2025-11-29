@@ -5,37 +5,37 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import dev.beckerhealth.dominio.consultas.Consulta;
-import dev.beckerhealth.dominio.consultas.ConsultaRepository;
+import dev.beckerhealth.aplicacao.consultas.ConsultaServicoAplicacao;
+import dev.beckerhealth.aplicacao.consultas.dto.ConsultaResumo;
 
 @PageTitle("Consultas")
 @Route(value = "consultas", layout = MainView.class)
 public class ConsultasView extends VerticalLayout {
 
-    private final ConsultaRepository consultaRepository;
-    private final Grid<Consulta> grid;
+    private final ConsultaServicoAplicacao consultaServicoAplicacao;
+    private final Grid<ConsultaResumo> grid;
 
-    public ConsultasView(ConsultaRepository consultaRepository) {
-        this.consultaRepository = consultaRepository;
-        this.grid = new Grid<>(Consulta.class, false);
+    public ConsultasView(ConsultaServicoAplicacao consultaServicoAplicacao) {
+        this.consultaServicoAplicacao = consultaServicoAplicacao;
+        this.grid = new Grid<>(ConsultaResumo.class, false);
 
         configureGrid();
         add(grid);
     }
 
     private void configureGrid() {
-        grid.addColumn(consulta -> consulta.getPaciente().getNome()).setHeader("Paciente");
-        grid.addColumn(consulta -> consulta.getMedico().getNome()).setHeader("Médico");
-        grid.addColumn(Consulta::getDataConsulta).setHeader("Data");
-        grid.addColumn(Consulta::getHoraConsulta).setHeader("Hora");
-        grid.addColumn(consulta -> consulta.getTipo().name()).setHeader("Tipo");
-        grid.addColumn(consulta -> consulta.getStatus().name()).setHeader("Status");
+        grid.addColumn(ConsultaResumo::getPacienteNome).setHeader("Paciente");
+        grid.addColumn(ConsultaResumo::getMedicoNome).setHeader("Médico");
+        grid.addColumn(ConsultaResumo::getDataConsulta).setHeader("Data");
+        grid.addColumn(ConsultaResumo::getHoraConsulta).setHeader("Hora");
+        grid.addColumn(ConsultaResumo::getTipo).setHeader("Tipo");
+        grid.addColumn(ConsultaResumo::getStatus).setHeader("Status");
 
         updateList();
     }
 
     private void updateList() {
-        grid.setItems(consultaRepository.listarTodas());
+        grid.setItems(consultaServicoAplicacao.pesquisarResumos());
     }
 }
 
