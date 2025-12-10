@@ -21,6 +21,7 @@
         <dependency>
             <groupId>dev.beckerhealth</groupId>
             <artifactId>dominio-compartilhado</artifactId>
+            <version>${project.version}</version>
         </dependency>
         
         <dependency>

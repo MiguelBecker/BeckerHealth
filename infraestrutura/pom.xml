@@ -26,26 +26,31 @@
         <dependency>
             <groupId>dev.beckerhealth</groupId>
             <artifactId>dominio-compartilhado</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>dev.beckerhealth</groupId>
             <artifactId>dominio-consultas</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>dev.beckerhealth</groupId>
             <artifactId>dominio-prontuario</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>dev.beckerhealth</groupId>
             <artifactId>dominio-notificacao</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>dev.beckerhealth</groupId>
             <artifactId>dominio-relatorios</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

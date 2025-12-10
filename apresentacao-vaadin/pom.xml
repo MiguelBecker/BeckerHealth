@@ -21,11 +21,13 @@
         <dependency>
             <groupId>dev.beckerhealth</groupId>
             <artifactId>aplicacao</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>dev.beckerhealth</groupId>
             <artifactId>infraestrutura</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
