@@ -10,7 +10,7 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.RouterLink;
 
-@Route("")
+@Route("main")
 public class MainView extends AppLayout {
 
     public MainView() {
