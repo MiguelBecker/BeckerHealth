@@ -2,8 +2,6 @@ package dev.beckerhealth.dominio.relatorios;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
-import dev.beckerhealth.dominio.compartilhado.usuario.Usuario;
-
 import java.time.LocalDateTime;
 
 public class Relatorio {
@@ -11,7 +9,7 @@ public class Relatorio {
     private String titulo;
     private String conteudo;
     private TipoRelatorio tipo;
-    private Usuario geradoPor;
+    private Long geradoPorId;
     private LocalDateTime dataGeracao;
     private StatusRelatorio status = StatusRelatorio.GERADO;
     private String observacoes;
@@ -20,7 +18,7 @@ public class Relatorio {
     }
 
     public Relatorio(Long id, String titulo, String conteudo, TipoRelatorio tipo,
-                     Usuario geradoPor, LocalDateTime dataGeracao, StatusRelatorio status,
+                     Long geradoPorId, LocalDateTime dataGeracao, StatusRelatorio status,
                      String observacoes) {
         notNull(titulo, "O título não pode ser nulo");
         notNull(conteudo, "O conteúdo não pode ser nulo");
@@ -32,7 +30,7 @@ public class Relatorio {
         this.titulo = titulo;
         this.conteudo = conteudo;
         this.tipo = tipo;
-        this.geradoPor = geradoPor;
+        this.geradoPorId = geradoPorId;
         this.dataGeracao = dataGeracao;
         this.status = status;
         this.observacoes = observacoes;
@@ -73,12 +71,12 @@ public class Relatorio {
         this.tipo = tipo;
     }
 
-    public Usuario getGeradoPor() {
-        return geradoPor;
+    public Long getGeradoPorId() {
+        return geradoPorId;
     }
 
-    public void setGeradoPor(Usuario geradoPor) {
-        this.geradoPor = geradoPor;
+    public void setGeradoPorId(Long geradoPorId) {
+        this.geradoPorId = geradoPorId;
     }
 
     public LocalDateTime getDataGeracao() {

@@ -24,6 +24,7 @@
         <module>infraestrutura</module>
 
         <module>apresentacao-backend</module>
+        <module>apresentacao-frontend</module>
         <module>apresentacao-vaadin</module>
     </modules>
 

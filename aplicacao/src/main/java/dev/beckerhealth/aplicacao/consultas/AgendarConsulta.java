@@ -16,12 +16,18 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Service
-@RequiredArgsConstructor
 public class AgendarConsulta {
 
     private final ConsultaRepository consultaRepository;
     private final EventoBarramento eventoBarramento;
     private final ProcessamentoConsultaAgendada processamentoConsultaAgendada;
+
+    public AgendarConsulta(ConsultaRepository consultaRepository, EventoBarramento eventoBarramento,
+                          ProcessamentoConsultaAgendada processamentoConsultaAgendada) {
+        this.consultaRepository = consultaRepository;
+        this.eventoBarramento = eventoBarramento;
+        this.processamentoConsultaAgendada = processamentoConsultaAgendada;
+    }
 
     public ConsultaResumo executar(
             Long pacienteId,

@@ -1,17 +1,16 @@
 package dev.beckerhealth.apresentacao.vaadin;
 
 import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.RouterLink;
 
+@Route("")
 public class MainView extends AppLayout {
 
     public MainView() {
@@ -37,16 +36,12 @@ public class MainView extends AppLayout {
 
     private void createDrawer() {
         RouterLink consultasLink = new RouterLink("Consultas", ConsultasView.class);
-        consultasLink.setIcon(VaadinIcon.CALENDAR.create());
 
         RouterLink prontuariosLink = new RouterLink("Prontuários", ProntuariosView.class);
-        prontuariosLink.setIcon(VaadinIcon.FILE_TEXT.create());
 
         RouterLink notificacoesLink = new RouterLink("Notificações", NotificacoesView.class);
-        notificacoesLink.setIcon(VaadinIcon.BELL.create());
 
         RouterLink relatoriosLink = new RouterLink("Relatórios", RelatoriosView.class);
-        relatoriosLink.setIcon(VaadinIcon.CHART_LINE.create());
 
         Tabs tabs = new Tabs(
                 new Tab(consultasLink),

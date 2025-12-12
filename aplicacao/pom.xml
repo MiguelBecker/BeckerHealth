@@ -17,6 +17,7 @@
     <name>Aplicação</name>
     <description>Camada de Aplicação - Casos de Uso e DTOs</description>
 
+
     <dependencies>
         <dependency>
             <groupId>dev.beckerhealth</groupId>
