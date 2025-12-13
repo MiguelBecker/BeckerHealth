@@ -37,7 +37,8 @@ class ConsultaRepositoryImpl implements ConsultaRepository, ConsultaRepositorioA
     @Transactional
     @Override
     public Optional<Consulta> buscarPorId(ConsultaId id) {
-        return repositorio.findById(id != null ? id.getId() : null)
+        // Usar método com fetch join para garantir que paciente e médico sejam carregados
+        return repositorio.findByIdWithRelations(id != null ? id.getId() : null)
                 .map(consultaJpa -> mapeador.map(consultaJpa, Consulta.class));
     }
 

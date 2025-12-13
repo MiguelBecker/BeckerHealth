@@ -8,10 +8,13 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import dev.beckerhealth.aplicacao.consultas.CancelarConsulta;
+import dev.beckerhealth.aplicacao.consultas.ReagendarConsulta;
 import dev.beckerhealth.aplicacao.consultas.dto.ConsultaResumo;
 import dev.beckerhealth.dominio.consultas.Consulta;
 import dev.beckerhealth.dominio.consultas.ConsultaRepository;
 import dev.beckerhealth.dominio.consultas.ConsultaId;
+import com.vaadin.flow.component.notification.Notification;
 
 import java.time.format.DateTimeFormatter;
 
@@ -19,13 +22,26 @@ public class ConsultaCard extends VerticalLayout {
     
     private final ConsultaResumo consulta;
     private final ConsultaRepository consultaRepository;
+    private final CancelarConsulta cancelarConsulta;
+    private final ReagendarConsulta reagendarConsulta;
     private final Runnable onAtualizado;
     
     public ConsultaCard(ConsultaResumo consulta, 
                        ConsultaRepository consultaRepository,
+                       CancelarConsulta cancelarConsulta,
+                       Runnable onAtualizado) {
+        this(consulta, consultaRepository, cancelarConsulta, null, onAtualizado);
+    }
+    
+    public ConsultaCard(ConsultaResumo consulta, 
+                       ConsultaRepository consultaRepository,
+                       CancelarConsulta cancelarConsulta,
+                       ReagendarConsulta reagendarConsulta,
                        Runnable onAtualizado) {
         this.consulta = consulta;
         this.consultaRepository = consultaRepository;
+        this.cancelarConsulta = cancelarConsulta;
+        this.reagendarConsulta = reagendarConsulta;
         this.onAtualizado = onAtualizado;
         addClassNames("consulta-card");
         setPadding(false);
@@ -196,6 +212,7 @@ public class ConsultaCard extends VerticalLayout {
         ReagendarConsultaDialog dialog = new ReagendarConsultaDialog(
             consulta,
             consultaRepository,
+            reagendarConsulta,
             onAtualizado
         );
         dialog.open();
@@ -212,16 +229,23 @@ public class ConsultaCard extends VerticalLayout {
         
         confirmDialog.addConfirmListener(e -> {
             try {
-                Consulta consultaEntity = consultaRepository.buscarPorId(new ConsultaId(consulta.getId()))
-                    .orElseThrow(() -> new IllegalArgumentException("Consulta não encontrada"));
+                if (cancelarConsulta != null) {
+                    cancelarConsulta.executar(consulta.getId());
+                } else {
+                    // Fallback caso o serviço não esteja disponível
+                    Consulta consultaEntity = consultaRepository.buscarPorId(new ConsultaId(consulta.getId()))
+                        .orElseThrow(() -> new IllegalArgumentException("Consulta não encontrada"));
+                    
+                    consultaEntity.setStatus(Consulta.StatusConsulta.CANCELADA);
+                    consultaRepository.salvar(consultaEntity);
+                }
                 
-                consultaEntity.setStatus(Consulta.StatusConsulta.CANCELADA);
-                consultaRepository.salvar(consultaEntity);
-                
+                Notification.show("Consulta cancelada com sucesso!", 3000, Notification.Position.TOP_CENTER);
                 onAtualizado.run();
                 getUI().ifPresent(ui -> ui.getPage().reload());
             } catch (Exception ex) {
-                // Tratar erro
+                ex.printStackTrace();
+                Notification.show("Erro ao cancelar consulta: " + ex.getMessage(), 5000, Notification.Position.TOP_CENTER);
             }
         });
         

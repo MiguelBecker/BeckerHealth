@@ -13,10 +13,14 @@ public class EventoConfiguracao {
 
     @Autowired
     private NotificacaoConsultaObservador notificacaoConsultaObservador;
+    
+    @Autowired
+    private NotificacaoConsultaCanceladaObservador notificacaoConsultaCanceladaObservador;
 
     @PostConstruct
     public void configurarObservadores() {
         eventoBarramento.adicionar(notificacaoConsultaObservador);
+        eventoBarramento.adicionar(notificacaoConsultaCanceladaObservador);
     }
 }
 

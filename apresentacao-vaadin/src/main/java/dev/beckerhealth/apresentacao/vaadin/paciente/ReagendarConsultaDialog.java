@@ -9,10 +9,12 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.timepicker.TimePicker;
+import dev.beckerhealth.aplicacao.consultas.ReagendarConsulta;
 import dev.beckerhealth.aplicacao.consultas.dto.ConsultaResumo;
 import dev.beckerhealth.dominio.consultas.Consulta;
 import dev.beckerhealth.dominio.consultas.ConsultaRepository;
 import dev.beckerhealth.dominio.consultas.ConsultaId;
+import com.vaadin.flow.component.notification.Notification;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,6 +23,7 @@ public class ReagendarConsultaDialog extends Dialog {
     
     private final ConsultaResumo consulta;
     private final ConsultaRepository consultaRepository;
+    private final ReagendarConsulta reagendarConsulta;
     private final Runnable onReagendado;
     
     private DatePicker dataField;
@@ -29,8 +32,16 @@ public class ReagendarConsultaDialog extends Dialog {
     public ReagendarConsultaDialog(ConsultaResumo consulta, 
                                    ConsultaRepository consultaRepository,
                                    Runnable onReagendado) {
+        this(consulta, consultaRepository, null, onReagendado);
+    }
+    
+    public ReagendarConsultaDialog(ConsultaResumo consulta, 
+                                   ConsultaRepository consultaRepository,
+                                   ReagendarConsulta reagendarConsulta,
+                                   Runnable onReagendado) {
         this.consulta = consulta;
         this.consultaRepository = consultaRepository;
+        this.reagendarConsulta = reagendarConsulta;
         this.onReagendado = onReagendado;
         
         setWidth("600px");
@@ -103,26 +114,33 @@ public class ReagendarConsultaDialog extends Dialog {
     private void confirmarReagendamento() {
         if (validarCampos()) {
             try {
-                Consulta consultaEntity = consultaRepository.buscarPorId(new ConsultaId(consulta.getId()))
-                    .orElseThrow(() -> new IllegalArgumentException("Consulta não encontrada"));
-                
                 LocalDate novaData = dataField.getValue();
                 LocalTime novaHora = horaField.getValue();
-
-                if (novaData != null && !novaData.equals(consultaEntity.getDataConsulta())) {
-                    consultaEntity.setDataConsulta(novaData);
-                }
-                if (novaHora != null && !novaHora.equals(consultaEntity.getHoraConsulta())) {
-                    consultaEntity.setHoraConsulta(novaHora);
+                
+                if (reagendarConsulta != null) {
+                    reagendarConsulta.executar(consulta.getId(), novaData, novaHora);
+                } else {
+                    // Fallback caso o serviço não esteja disponível
+                    Consulta consultaEntity = consultaRepository.buscarPorId(new ConsultaId(consulta.getId()))
+                        .orElseThrow(() -> new IllegalArgumentException("Consulta não encontrada"));
+                    
+                    if (novaData != null && !novaData.equals(consultaEntity.getDataConsulta())) {
+                        consultaEntity.setDataConsulta(novaData);
+                    }
+                    if (novaHora != null && !novaHora.equals(consultaEntity.getHoraConsulta())) {
+                        consultaEntity.setHoraConsulta(novaHora);
+                    }
+                    
+                    consultaRepository.salvar(consultaEntity);
                 }
                 
-                consultaRepository.salvar(consultaEntity);
-                
+                Notification.show("Consulta reagendada com sucesso!", 3000, Notification.Position.TOP_CENTER);
                 close();
                 onReagendado.run();
                 getUI().ifPresent(ui -> ui.getPage().reload());
             } catch (Exception e) {
                 e.printStackTrace();
+                Notification.show("Erro ao reagendar consulta: " + e.getMessage(), 5000, Notification.Position.TOP_CENTER);
             }
         }
     }

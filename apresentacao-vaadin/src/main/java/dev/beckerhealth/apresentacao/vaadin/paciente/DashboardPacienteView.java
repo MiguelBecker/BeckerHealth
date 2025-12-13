@@ -11,6 +11,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.dependency.CssImport;
 import dev.beckerhealth.aplicacao.consultas.AgendarConsulta;
+import dev.beckerhealth.aplicacao.consultas.CancelarConsulta;
+import dev.beckerhealth.aplicacao.consultas.ReagendarConsulta;
 import dev.beckerhealth.aplicacao.consultas.ConsultaServicoAplicacao;
 import dev.beckerhealth.aplicacao.consultas.dto.ConsultaResumo;
 import dev.beckerhealth.dominio.consultas.ConsultaRepository;
@@ -25,14 +27,20 @@ public class DashboardPacienteView extends VerticalLayout {
     private final ConsultaServicoAplicacao consultaServicoAplicacao;
     private final ConsultaRepository consultaRepository;
     private final AgendarConsulta agendarConsulta;
+    private final CancelarConsulta cancelarConsulta;
+    private final ReagendarConsulta reagendarConsulta;
     private VerticalLayout conteudoLayout;
     
     public DashboardPacienteView(ConsultaServicoAplicacao consultaServicoAplicacao,
                                  ConsultaRepository consultaRepository,
-                                 AgendarConsulta agendarConsulta) {
+                                 AgendarConsulta agendarConsulta,
+                                 CancelarConsulta cancelarConsulta,
+                                 ReagendarConsulta reagendarConsulta) {
         this.consultaServicoAplicacao = consultaServicoAplicacao;
         this.consultaRepository = consultaRepository;
         this.agendarConsulta = agendarConsulta;
+        this.cancelarConsulta = cancelarConsulta;
+        this.reagendarConsulta = reagendarConsulta;
         setPadding(false);
         setSpacing(false);
         setSizeFull();
@@ -187,6 +195,8 @@ public class DashboardPacienteView extends VerticalLayout {
                 consultasLayout.add(new ConsultaCard(
                     consulta,
                     consultaRepository,
+                    cancelarConsulta,
+                    reagendarConsulta,
                     () -> atualizarConteudoConsultas()
                 ));
             });
