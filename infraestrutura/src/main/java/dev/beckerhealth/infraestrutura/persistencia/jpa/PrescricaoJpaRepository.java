@@ -1,0 +1,11 @@
+package dev.beckerhealth.infraestrutura.persistencia.jpa;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface PrescricaoJpaRepository extends JpaRepository<PrescricaoJpa, Long> {
+    List<PrescricaoJpa> findByProntuarioId(Long prontuarioId);
+}

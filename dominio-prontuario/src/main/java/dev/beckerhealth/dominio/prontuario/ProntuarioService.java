@@ -1,42 +1,109 @@
 package dev.beckerhealth.dominio.prontuario;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public class ProntuarioService {
 
-    private final ProntuarioRepository repository;
+    private final ProntuarioRepository prontuarioRepository;
+    private final ExameRepository exameRepository;
+    private final PrescricaoRepository prescricaoRepository;
 
-    public ProntuarioService(ProntuarioRepository repository) {
-        this.repository = repository;
+    public ProntuarioService(ProntuarioRepository prontuarioRepository,
+                           ExameRepository exameRepository,
+                           PrescricaoRepository prescricaoRepository) {
+        this.prontuarioRepository = prontuarioRepository;
+        this.exameRepository = exameRepository;
+        this.prescricaoRepository = prescricaoRepository;
     }
 
     public Prontuario criarProntuario(Prontuario prontuario) {
-        if (prontuario.getMedicoResponsavel() == null) {
-            throw new IllegalArgumentException("Apenas médicos podem criar/editar prontuários");
-        }
         prontuario.setDataAtendimento(LocalDateTime.now());
-        return repository.salvar(prontuario);
+        return prontuarioRepository.salvar(prontuario);
     }
 
+    public Prontuario editarProntuario(Prontuario prontuario) {
+        return prontuarioRepository.salvar(prontuario);
+    }
+
+    public Exame solicitarExame(Exame exame) {
+        exame.setDataSolicitacao(LocalDateTime.now());
+        exame.setStatus(Exame.StatusExame.PENDENTE);
+        return exameRepository.salvar(exame);
+    }
+
+    public Exame liberarResultadoExame(Long exameId, String resultado, String observacoes) {
+        Optional<Exame> exameOpt = exameRepository.buscarPorId(exameId);
+        if (exameOpt.isEmpty()) {
+            throw new IllegalArgumentException("Exame não encontrado");
+        }
+
+        Exame exame = exameOpt.get();
+        exame.liberarResultado(resultado, observacoes);
+        return exameRepository.salvar(exame);
+    }
+
+    public String visualizarResultadoExame(Long exameId) {
+        Optional<Exame> exameOpt = exameRepository.buscarPorId(exameId);
+        if (exameOpt.isEmpty()) {
+            throw new IllegalArgumentException("Exame não encontrado");
+        }
+
+        Exame exame = exameOpt.get();
+        return exame.getResultado();
+    }
+
+    public Prescricao criarPrescricao(Prescricao prescricao) {
+        if (prescricao.getDataValidade() == null) {
+            throw new IllegalArgumentException("Prescrições devem conter validade obrigatória");
+        }
+
+        prescricao.setDataEmissao(LocalDate.now());
+        return prescricaoRepository.salvar(prescricao);
+    }
+
+    // Métodos de busca para Prontuário
     public Optional<Prontuario> buscarPorId(Long id) {
-        return repository.buscarPorId(id);
+        return prontuarioRepository.buscarPorId(id);
     }
 
     public List<Prontuario> listarTodos() {
-        return repository.listarTodos();
+        return prontuarioRepository.listarTodos();
     }
 
     public List<Prontuario> buscarPorPaciente(Long pacienteId) {
-        return repository.buscarPorPaciente(pacienteId);
+        return prontuarioRepository.buscarPorPaciente(pacienteId);
     }
 
     public List<Prontuario> buscarPorMedico(Long medicoId) {
-        return repository.buscarPorMedico(medicoId);
+        return prontuarioRepository.buscarPorMedico(medicoId);
     }
 
     public void deletar(Long id) {
-        repository.deletar(id);
+        prontuarioRepository.deletar(id);
+    }
+
+    // Métodos de busca para Exame
+    public List<Exame> listarExames() {
+        return exameRepository.listarTodos();
+    }
+
+    public List<Exame> buscarExamesPorProntuario(Long prontuarioId) {
+        return exameRepository.buscarPorProntuario(prontuarioId);
+    }
+
+    public List<Exame> buscarExamesPorConsulta(Long consultaId) {
+        return exameRepository.buscarPorConsulta(consultaId);
+    }
+
+    // Métodos de busca para Prescricao
+    public List<Prescricao> listarPrescricoes() {
+        return prescricaoRepository.listarTodos();
+    }
+
+    public List<Prescricao> buscarPrescricoesPorProntuario(Long prontuarioId) {
+        return prescricaoRepository.buscarPorProntuario(prontuarioId);
     }
 }

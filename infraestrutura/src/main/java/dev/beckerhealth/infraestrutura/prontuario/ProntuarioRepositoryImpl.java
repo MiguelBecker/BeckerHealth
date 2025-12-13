@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-class ProntuarioRepositoryImpl implements ProntuarioRepository {
+public class ProntuarioRepositoryImpl implements ProntuarioRepository {
     @Autowired
     ProntuarioJpaRepository repositorio;
 

@@ -346,11 +346,6 @@ function useQueuedNavigate(
     return enqueueNavigation;
 }
 
-const flowNavigation = () => {
-  // @ts-ignore
-  window.Vaadin.Flow.navigation = true;
-};
-
 function Flow() {
     const ref = useRef<HTMLOutputElement>(null);
     const navigate = useNavigate();
@@ -408,8 +403,6 @@ function Flow() {
             // When navigation is triggered by click on a link, fromAnchor is set to true
             // in order to get a server round-trip even when navigating to the same URL again
             fromAnchor.current = true;
-            // @ts-ignore
-            window.Vaadin.Flow.navigation = true;
             navigate(path);
             // Dispatch close event for overlay drawer on click navigation.
             window.dispatchEvent(new CustomEvent('close-overlay-drawer'));
@@ -470,8 +463,6 @@ function Flow() {
     }, [vaadinRouterGoEventHandler, vaadinNavigateEventHandler]);
 
     useEffect(() => {
-        // @ts-ignore
-        window.addEventListener("popstate", flowNavigation);
         window.addEventListener('click', navigateEventHandler);
         flowReact.active = true;
 
@@ -479,8 +470,6 @@ function Flow() {
             containerRef.current?.parentNode?.removeChild(containerRef.current);
             containerRef.current?.removeEventListener('flow-portal-add', addPortalEventHandler as EventListener);
             containerRef.current = undefined;
-            // @ts-ignore
-            window.removeEventListener("popstate", flowNavigation);
             window.removeEventListener('click', navigateEventHandler);
             flowReact.active = false;
         };

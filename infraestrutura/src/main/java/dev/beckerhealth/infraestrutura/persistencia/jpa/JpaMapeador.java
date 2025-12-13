@@ -10,6 +10,8 @@ import dev.beckerhealth.dominio.compartilhado.usuario.*;
 import dev.beckerhealth.dominio.consultas.Consulta;
 import dev.beckerhealth.dominio.consultas.ConsultaId;
 import dev.beckerhealth.dominio.notificacao.Notificacao;
+import dev.beckerhealth.dominio.prontuario.Exame;
+import dev.beckerhealth.dominio.prontuario.Prescricao;
 import dev.beckerhealth.dominio.prontuario.Prontuario;
 import dev.beckerhealth.dominio.relatorios.Relatorio;
 
@@ -403,6 +405,81 @@ public class JpaMapeador extends ModelMapper {
             @Override
             protected RelatorioJpa.StatusRelatorio convert(Relatorio.StatusRelatorio source) {
                 return source != null ? RelatorioJpa.StatusRelatorio.valueOf(source.name()) : null;
+            }
+        });
+
+        // Mapeamentos para Exame
+        addConverter(new AbstractConverter<ExameJpa, Exame>() {
+            @Override
+            protected Exame convert(ExameJpa source) {
+                if (source == null) return null;
+                var prontuario = map(source.prontuario, Prontuario.class);
+                return new Exame(source.id, prontuario, source.consultaId, source.nomeExame,
+                        source.descricao, source.dataSolicitacao, source.resultado,
+                        map(source.status, Exame.StatusExame.class), source.dataLiberacao,
+                        source.observacoesMedico);
+            }
+        });
+
+        addConverter(new AbstractConverter<Exame, ExameJpa>() {
+            @Override
+            protected ExameJpa convert(Exame source) {
+                if (source == null) return null;
+                var exameJpa = new ExameJpa();
+                exameJpa.id = source.getId();
+                exameJpa.prontuario = map(source.getProntuario(), ProntuarioJpa.class);
+                exameJpa.consultaId = source.getConsultaId();
+                exameJpa.nomeExame = source.getNomeExame();
+                exameJpa.descricao = source.getDescricao();
+                exameJpa.dataSolicitacao = source.getDataSolicitacao();
+                exameJpa.resultado = source.getResultado();
+                exameJpa.status = map(source.getStatus(), ExameJpa.StatusExame.class);
+                exameJpa.dataLiberacao = source.getDataLiberacao();
+                exameJpa.observacoesMedico = source.getObservacoesMedico();
+                return exameJpa;
+            }
+        });
+
+        addConverter(new AbstractConverter<ExameJpa.StatusExame, Exame.StatusExame>() {
+            @Override
+            protected Exame.StatusExame convert(ExameJpa.StatusExame source) {
+                return source != null ? Exame.StatusExame.valueOf(source.name()) : null;
+            }
+        });
+
+        addConverter(new AbstractConverter<Exame.StatusExame, ExameJpa.StatusExame>() {
+            @Override
+            protected ExameJpa.StatusExame convert(Exame.StatusExame source) {
+                return source != null ? ExameJpa.StatusExame.valueOf(source.name()) : null;
+            }
+        });
+
+        // Mapeamentos para Prescricao
+        addConverter(new AbstractConverter<PrescricaoJpa, Prescricao>() {
+            @Override
+            protected Prescricao convert(PrescricaoJpa source) {
+                if (source == null) return null;
+                var prontuario = map(source.prontuario, Prontuario.class);
+                return new Prescricao(source.id, prontuario, source.medicamentos,
+                        source.posologia, source.dataEmissao, source.dataValidade,
+                        source.assinaturaMedica, source.observacoes);
+            }
+        });
+
+        addConverter(new AbstractConverter<Prescricao, PrescricaoJpa>() {
+            @Override
+            protected PrescricaoJpa convert(Prescricao source) {
+                if (source == null) return null;
+                var prescricaoJpa = new PrescricaoJpa();
+                prescricaoJpa.id = source.getId();
+                prescricaoJpa.prontuario = map(source.getProntuario(), ProntuarioJpa.class);
+                prescricaoJpa.medicamentos = source.getMedicamentos();
+                prescricaoJpa.posologia = source.getPosologia();
+                prescricaoJpa.dataEmissao = source.getDataEmissao();
+                prescricaoJpa.dataValidade = source.getDataValidade();
+                prescricaoJpa.assinaturaMedica = source.getAssinaturaMedica();
+                prescricaoJpa.observacoes = source.getObservacoes();
+                return prescricaoJpa;
             }
         });
     }

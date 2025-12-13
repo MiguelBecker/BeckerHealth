@@ -9,10 +9,10 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.component.dependency.CssImport;
 import dev.beckerhealth.aplicacao.consultas.ConsultaServicoAplicacao;
 import dev.beckerhealth.aplicacao.consultas.dto.ConsultaResumo;
 import dev.beckerhealth.dominio.consultas.ConsultaRepository;
+import dev.beckerhealth.apresentacao.vaadin.medico.ProntuarioMedicoView;
 
 import java.time.LocalDate;
 import java.time.format.TextStyle;
@@ -21,7 +21,6 @@ import java.util.Locale;
 
 @PageTitle("Dashboard - Médico")
 @Route("medico/dashboard")
-@CssImport("./styles/dashboard-medico.css")
 public class DashboardMedicoView extends VerticalLayout {
     
     private final ConsultaServicoAplicacao consultaServicoAplicacao;
@@ -188,6 +187,9 @@ public class DashboardMedicoView extends VerticalLayout {
         
         if (tab.getLabel().equals("Agenda")) {
             atualizarConteudoAgenda();
+        } else if (tab.getLabel().equals("Prontuários")) {
+            // Navegar para a view de prontuários
+            getUI().ifPresent(ui -> ui.navigate(ProntuarioMedicoView.class));
         } else {
             Div placeholder = new Div();
             placeholder.setText("Conteúdo de " + tab.getLabel() + " em desenvolvimento");

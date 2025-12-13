@@ -7,9 +7,9 @@
 
     <parent>
         <groupId>dev.beckerhealth</groupId>
-        <artifactId>beckerhealth-pai</artifactId>
+        <artifactId>beckerhealth-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../pai</relativePath>
+        <relativePath>..</relativePath>
     </parent>
 
     <artifactId>apresentacao-vaadin</artifactId>
@@ -31,6 +31,26 @@
         <dependency>
             <groupId>dev.beckerhealth</groupId>
             <artifactId>dominio-compartilhado</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.beckerhealth</groupId>
+            <artifactId>dominio-consultas</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.beckerhealth</groupId>
+            <artifactId>dominio-prontuario</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.beckerhealth</groupId>
+            <artifactId>dominio-notificacao</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.beckerhealth</groupId>
+            <artifactId>dominio-relatorios</artifactId>
         </dependency>
 
         <dependency>
