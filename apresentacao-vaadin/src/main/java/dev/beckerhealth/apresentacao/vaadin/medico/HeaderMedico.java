@@ -6,10 +6,14 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import dev.beckerhealth.apresentacao.vaadin.SelecaoPerfilView;
+import dev.beckerhealth.aplicacao.notificacao.NotificacaoServicoAplicacao;
 
 public class HeaderMedico extends HorizontalLayout {
+    private final NotificacaoServicoAplicacao notificacaoServico;
+    private NotificacaoComponent notificacaoComponent;
     
-    public HeaderMedico() {
+    public HeaderMedico(NotificacaoServicoAplicacao notificacaoServico) {
+        this.notificacaoServico = notificacaoServico;
         setWidthFull();
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.BETWEEN);
@@ -39,12 +43,15 @@ public class HeaderMedico extends HorizontalLayout {
         infoLayout.setAlignItems(Alignment.CENTER);
         infoLayout.setSpacing(true);
         
-        Div notificacao = criarNotificacao();
+        // ID 2 = Dr. João Silva (médico), ID 4 = Carlos Oliveira (paciente)
+        // TEMPORÁRIO: Usando ID 4 (paciente) para testar, já que notificações são criadas para pacientes
+        // TODO: Quando houver notificações para médicos, usar ID do médico logado
+        notificacaoComponent = new NotificacaoComponent(notificacaoServico, 4L); // ID do paciente para teste
         VerticalLayout userInfo = criarUserInfo();
         Div avatar = criarAvatar();
         Div sair = criarBotaoSair();
         
-        infoLayout.add(notificacao, userInfo, avatar, sair);
+        infoLayout.add(notificacaoComponent, userInfo, avatar, sair);
         return infoLayout;
     }
     
@@ -65,39 +72,10 @@ public class HeaderMedico extends HorizontalLayout {
         return avatar;
     }
     
-    private Div criarNotificacao() {
-        Div container = new Div();
-        container.getStyle().set("position", "relative");
-        container.getStyle().set("cursor", "pointer");
-        container.getStyle().set("width", "24px");
-        container.getStyle().set("height", "24px");
-        
-        String svgContent = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" " +
-                "style=\"stroke: #6B7280; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;\">" +
-                "<path d=\"M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9\"></path>" +
-                "<path d=\"M13.73 21a2 2 0 0 1-3.46 0\"></path>" +
-                "</svg>";
-        
-        container.getElement().setProperty("innerHTML", svgContent);
-        
-        Div badge = new Div();
-        badge.getStyle().set("position", "absolute");
-        badge.getStyle().set("top", "-4px");
-        badge.getStyle().set("right", "-4px");
-        badge.getStyle().set("width", "18px");
-        badge.getStyle().set("height", "18px");
-        badge.getStyle().set("background", "#EF4444");
-        badge.getStyle().set("border-radius", "50%");
-        badge.getStyle().set("display", "flex");
-        badge.getStyle().set("align-items", "center");
-        badge.getStyle().set("justify-content", "center");
-        badge.getStyle().set("color", "white");
-        badge.getStyle().set("font-size", "10px");
-        badge.getStyle().set("font-weight", "600");
-        badge.setText("3");
-        
-        container.add(badge);
-        return container;
+    public void atualizarNotificacoes() {
+        if (notificacaoComponent != null) {
+            notificacaoComponent.atualizar();
+        }
     }
     
     private VerticalLayout criarUserInfo() {

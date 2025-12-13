@@ -59,15 +59,22 @@ public class ReagendarConsulta {
 
         // Verificar conflito de horário
         List<Consulta> consultasNoDia = consultaRepository.buscarPorData(novaData);
-        boolean ocupado = consultasNoDia.stream().anyMatch(c ->
-                c.getId() != null && !c.getId().equals(consulta.getId()) && // Excluir a própria consulta
-                c.getMedico().getId().equals(consulta.getMedico().getId()) &&
-                c.getHoraConsulta().equals(novaHora) &&
-                c.getStatus() == Consulta.StatusConsulta.AGENDADA
-        );
+        boolean ocupado = consultasNoDia.stream().anyMatch(c -> {
+            // Excluir a própria consulta da verificação
+            boolean naoEhAMesmaConsulta = c.getId() == null || consulta.getId() == null || 
+                    !c.getId().getId().equals(consulta.getId().getId());
+            
+            // Verificar se há conflito de horário
+            return naoEhAMesmaConsulta &&
+                    c.getMedico() != null && consulta.getMedico() != null &&
+                    c.getMedico().getId().equals(consulta.getMedico().getId()) &&
+                    c.getHoraConsulta() != null && novaHora != null &&
+                    c.getHoraConsulta().equals(novaHora) &&
+                    c.getStatus() == Consulta.StatusConsulta.AGENDADA;
+        });
 
         if (ocupado && consulta.getTipo() != Consulta.TipoConsulta.URGENCIA) {
-            throw new IllegalStateException("Horário já ocupado para este médico");
+            throw new IllegalStateException("Horário já ocupado para este médico. Escolha outro horário.");
         }
     }
 

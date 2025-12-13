@@ -10,9 +10,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import dev.beckerhealth.aplicacao.consultas.ConsultaRepositorioAplicacao;
 import dev.beckerhealth.aplicacao.consultas.ConsultaServicoAplicacao;
 import dev.beckerhealth.aplicacao.consultas.processamento.ProcessamentoConsultaAgendada;
+import dev.beckerhealth.aplicacao.notificacao.NotificacaoServicoAplicacao;
 import dev.beckerhealth.aplicacao.prontuario.ProntuarioRepositorioAplicacao;
 import dev.beckerhealth.aplicacao.prontuario.ProntuarioServicoAplicacao;
 import dev.beckerhealth.dominio.compartilhado.evento.EventoBarramento;
+import dev.beckerhealth.dominio.notificacao.NotificacaoRepository;
 
 @SpringBootApplication(scanBasePackages = {
     "dev.beckerhealth.apresentacao.vaadin",
@@ -41,6 +43,11 @@ public class BeckerHealthApplication {
     @Bean
     public ProntuarioServicoAplicacao prontuarioServicoAplicacao(ProntuarioRepositorioAplicacao repositorio) {
         return new ProntuarioServicoAplicacao(repositorio);
+    }
+
+    @Bean
+    public NotificacaoServicoAplicacao notificacaoServicoAplicacao(NotificacaoRepository repository) {
+        return new NotificacaoServicoAplicacao(repository);
     }
 
     public static void main(String[] args) {

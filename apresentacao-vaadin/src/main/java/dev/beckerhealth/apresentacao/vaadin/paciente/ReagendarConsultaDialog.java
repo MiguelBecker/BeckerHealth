@@ -46,7 +46,7 @@ public class ReagendarConsultaDialog extends Dialog {
         
         setWidth("600px");
         setMaxWidth("90vw");
-        getStyle().set("border-radius", "12px");
+        // Removido: getStyle().set("border-radius", "12px"); - Dialog não suporta estilos no overlay
         setHeaderTitle("Reagendar Consulta");
         
         criarConteudo();
@@ -119,6 +119,12 @@ public class ReagendarConsultaDialog extends Dialog {
                 
                 if (reagendarConsulta != null) {
                     reagendarConsulta.executar(consulta.getId(), novaData, novaHora);
+                    Notification.show("Consulta reagendada com sucesso!", 3000, Notification.Position.TOP_CENTER);
+                    close();
+                    onReagendado.run();
+                    getUI().ifPresent(ui -> {
+                        ui.getPage().executeJs("setTimeout(() => window.location.reload(), 300);");
+                    });
                 } else {
                     // Fallback caso o serviço não esteja disponível
                     Consulta consultaEntity = consultaRepository.buscarPorId(new ConsultaId(consulta.getId()))
@@ -132,15 +138,19 @@ public class ReagendarConsultaDialog extends Dialog {
                     }
                     
                     consultaRepository.salvar(consultaEntity);
+                    Notification.show("Consulta reagendada com sucesso!", 3000, Notification.Position.TOP_CENTER);
+                    close();
+                    onReagendado.run();
+                    getUI().ifPresent(ui -> {
+                        ui.getPage().executeJs("setTimeout(() => window.location.reload(), 300);");
+                    });
                 }
-                
-                Notification.show("Consulta reagendada com sucesso!", 3000, Notification.Position.TOP_CENTER);
-                close();
-                onReagendado.run();
-                getUI().ifPresent(ui -> ui.getPage().reload());
-            } catch (Exception e) {
+            } catch (IllegalArgumentException | IllegalStateException e) {
                 e.printStackTrace();
                 Notification.show("Erro ao reagendar consulta: " + e.getMessage(), 5000, Notification.Position.TOP_CENTER);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Notification.show("Erro inesperado ao reagendar consulta: " + e.getMessage(), 5000, Notification.Position.TOP_CENTER);
             }
         }
     }

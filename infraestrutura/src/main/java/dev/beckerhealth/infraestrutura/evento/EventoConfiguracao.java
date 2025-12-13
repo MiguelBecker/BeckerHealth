@@ -23,4 +23,3 @@ public class EventoConfiguracao {
         eventoBarramento.adicionar(notificacaoConsultaCanceladaObservador);
     }
 }
-

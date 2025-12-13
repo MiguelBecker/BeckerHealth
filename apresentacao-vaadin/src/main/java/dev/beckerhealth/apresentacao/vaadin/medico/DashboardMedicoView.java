@@ -14,6 +14,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.dependency.CssImport;
 import dev.beckerhealth.aplicacao.consultas.ConsultaServicoAplicacao;
 import dev.beckerhealth.aplicacao.consultas.dto.ConsultaResumo;
+import dev.beckerhealth.aplicacao.notificacao.NotificacaoServicoAplicacao;
 import dev.beckerhealth.aplicacao.prontuario.ProntuarioServicoAplicacao;
 import dev.beckerhealth.aplicacao.prontuario.RegistrarProntuario;
 import dev.beckerhealth.aplicacao.prontuario.dto.ProntuarioResumo;
@@ -33,16 +34,20 @@ public class DashboardMedicoView extends VerticalLayout {
     private final ConsultaRepository consultaRepository;
     private final ProntuarioServicoAplicacao prontuarioServicoAplicacao;
     private final RegistrarProntuario registrarProntuario;
+    private final NotificacaoServicoAplicacao notificacaoServicoAplicacao;
+    private HeaderMedico headerMedico;
     private VerticalLayout conteudoLayout;
     
     public DashboardMedicoView(ConsultaServicoAplicacao consultaServicoAplicacao,
                               ConsultaRepository consultaRepository,
                               ProntuarioServicoAplicacao prontuarioServicoAplicacao,
-                              RegistrarProntuario registrarProntuario) {
+                              RegistrarProntuario registrarProntuario,
+                              NotificacaoServicoAplicacao notificacaoServicoAplicacao) {
         this.consultaServicoAplicacao = consultaServicoAplicacao;
         this.consultaRepository = consultaRepository;
         this.prontuarioServicoAplicacao = prontuarioServicoAplicacao;
         this.registrarProntuario = registrarProntuario;
+        this.notificacaoServicoAplicacao = notificacaoServicoAplicacao;
         setPadding(false);
         setSpacing(false);
         setSizeFull();
@@ -52,7 +57,8 @@ public class DashboardMedicoView extends VerticalLayout {
     }
     
     private HeaderMedico criarHeader() {
-        return new HeaderMedico();
+        headerMedico = new HeaderMedico(notificacaoServicoAplicacao);
+        return headerMedico;
     }
     
     private HorizontalLayout criarResumoCards() {
@@ -326,7 +332,12 @@ public class DashboardMedicoView extends VerticalLayout {
                     registrarProntuario,
                     consultaServicoAplicacao,
                     2L, // ID do médico (Dr. João Silva do banco de dados)
-                    () -> atualizarConteudoProntuarios()
+                    () -> {
+                        atualizarConteudoProntuarios();
+                        if (headerMedico != null) {
+                            headerMedico.atualizarNotificacoes();
+                        }
+                    }
                 );
                 dialog.open();
             });

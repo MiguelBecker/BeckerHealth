@@ -4,6 +4,9 @@ import dev.beckerhealth.aplicacao.prontuario.dto.ProntuarioResumo;
 import dev.beckerhealth.dominio.consultas.Consulta;
 import dev.beckerhealth.dominio.consultas.ConsultaId;
 import dev.beckerhealth.dominio.consultas.ConsultaRepository;
+import dev.beckerhealth.dominio.compartilhado.usuario.Paciente;
+import dev.beckerhealth.dominio.notificacao.Notificacao;
+import dev.beckerhealth.dominio.notificacao.NotificacaoRepository;
 import dev.beckerhealth.dominio.prontuario.Prontuario;
 import dev.beckerhealth.dominio.prontuario.ProntuarioRepository;
 import dev.beckerhealth.dominio.prontuario.Prontuario.TipoAtendimento;
@@ -15,11 +18,14 @@ import java.time.LocalDateTime;
 public class RegistrarProntuario {
     private final ProntuarioRepository prontuarioRepository;
     private final ConsultaRepository consultaRepository;
+    private final NotificacaoRepository notificacaoRepository;
 
     public RegistrarProntuario(ProntuarioRepository prontuarioRepository,
-                              ConsultaRepository consultaRepository) {
+                              ConsultaRepository consultaRepository,
+                              NotificacaoRepository notificacaoRepository) {
         this.prontuarioRepository = prontuarioRepository;
         this.consultaRepository = consultaRepository;
+        this.notificacaoRepository = notificacaoRepository;
     }
 
     public ProntuarioResumo executar(Long consultaId, Long medicoId, String anamnese, 
@@ -50,6 +56,20 @@ public class RegistrarProntuario {
         prontuario.setTipoAtendimento(mapTipoConsulta(consulta.getTipo()));
 
         Prontuario prontuarioSalvo = prontuarioRepository.salvar(prontuario);
+
+        // Criar notificação para o paciente
+        Notificacao notificacao = new Notificacao(
+            null,
+            consulta.getPaciente(),
+            "Prontuário Atualizado",
+            "Seu prontuário médico foi atualizado pelo Dr(a). " + consulta.getMedico().getNome() + ". Acesse para visualizar os detalhes.",
+            LocalDateTime.now(),
+            null,
+            Notificacao.TipoNotificacao.PRESCRICAO,
+            Notificacao.StatusNotificacao.NAO_LIDA,
+            "/prontuarios"
+        );
+        notificacaoRepository.salvar(notificacao);
 
         return mapearParaResumo(prontuarioSalvo);
     }
