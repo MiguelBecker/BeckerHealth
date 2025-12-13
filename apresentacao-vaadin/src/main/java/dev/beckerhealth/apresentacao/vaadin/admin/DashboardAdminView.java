@@ -14,6 +14,7 @@ import com.vaadin.flow.component.dependency.JavaScript;
 
 @PageTitle("Dashboard - Administrador")
 @Route("admin/dashboard")
+@CssImport("./styles/dashboard-admin.css")
 @JavaScript("https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js")
 public class DashboardAdminView extends VerticalLayout {
     

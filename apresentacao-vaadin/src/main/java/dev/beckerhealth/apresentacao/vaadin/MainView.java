@@ -9,8 +9,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.RouterLink;
-import dev.beckerhealth.apresentacao.vaadin.medico.ProntuarioMedicoView;
-import dev.beckerhealth.apresentacao.vaadin.paciente.ProntuarioPacienteView;
 
 @Route("main")
 public class MainView extends AppLayout {
@@ -39,9 +37,7 @@ public class MainView extends AppLayout {
     private void createDrawer() {
         RouterLink consultasLink = new RouterLink("Consultas", ConsultasView.class);
 
-        RouterLink prontuariosMedicoLink = new RouterLink("Prontuários (Médico)", ProntuarioMedicoView.class);
-        RouterLink prontuariosPacienteLink = new RouterLink("Meu Prontuário", ProntuarioPacienteView.class);
-        RouterLink prontuariosListLink = new RouterLink("Lista de Prontuários", ProntuariosView.class);
+        RouterLink prontuariosLink = new RouterLink("Prontuários", ProntuariosView.class);
 
         RouterLink notificacoesLink = new RouterLink("Notificações", NotificacoesView.class);
 
@@ -49,9 +45,7 @@ public class MainView extends AppLayout {
 
         Tabs tabs = new Tabs(
                 new Tab(consultasLink),
-                new Tab(prontuariosMedicoLink),
-                new Tab(prontuariosPacienteLink),
-                new Tab(prontuariosListLink),
+                new Tab(prontuariosLink),
                 new Tab(notificacoesLink),
                 new Tab(relatoriosLink)
         );

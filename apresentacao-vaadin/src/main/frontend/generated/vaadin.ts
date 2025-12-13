@@ -43,15 +43,10 @@ import '@vaadin/tabsheet/theme/lumo/vaadin-tabsheet.js';
 import '@vaadin/dialog/theme/lumo/vaadin-dialog.js';
 import '@vaadin/multi-select-combo-box/theme/lumo/vaadin-multi-select-combo-box.js';
 import '@vaadin/radio-group/theme/lumo/vaadin-radio-group.js';
+import '@vaadin/tooltip/theme/lumo/vaadin-tooltip.js';
 import '@vaadin/icons/vaadin-iconset.js';
 import '@vaadin/icon/vaadin-icon.js';
 import './index';
 
 import './vaadin-react.js';
 import 'Frontend/generated/jar-resources/vaadin-dev-tools/vaadin-dev-tools.js';
-
-import { Outlet } from 'react-router';
-(window as any).Vaadin ??= {};
-(window as any).Vaadin.copilot ??= {};
-(window as any).Vaadin.copilot._ref ??= {};
-(window as any).Vaadin.copilot._ref.Outlet = Outlet;

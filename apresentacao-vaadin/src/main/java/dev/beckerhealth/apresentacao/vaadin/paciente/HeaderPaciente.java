@@ -47,7 +47,7 @@ public class HeaderPaciente extends HorizontalLayout {
         infoLayout.add(notificacao, userInfo, avatar, sair);
         return infoLayout;
     }
-
+    
     private Div criarAvatar() {
         Div avatar = new Div();
         avatar.getStyle().set("width", "40px");

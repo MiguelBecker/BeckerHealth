@@ -1,10 +1,8 @@
 package dev.beckerhealth.infraestrutura.persistencia.jpa;
 
 import jakarta.persistence.*;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "notificacoes")
@@ -14,6 +12,7 @@ public class NotificacaoJpa {
     public Long id;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "destinatario_id", nullable = false)
     public UsuarioJpa destinatario;
 
     @Column(nullable = false, length = 200)

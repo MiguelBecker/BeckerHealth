@@ -14,6 +14,7 @@ import dev.beckerhealth.apresentacao.vaadin.perfil.PerfilUsuario;
 
 @PageTitle("BeckerHealth - Seleção de Perfil")
 @Route("")
+@CssImport("./styles/perfil-card.css")
 public class SelecaoPerfilView extends VerticalLayout {
 
     public SelecaoPerfilView() {

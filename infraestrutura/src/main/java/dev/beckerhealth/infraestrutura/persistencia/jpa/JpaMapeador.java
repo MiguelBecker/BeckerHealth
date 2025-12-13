@@ -10,8 +10,6 @@ import dev.beckerhealth.dominio.compartilhado.usuario.*;
 import dev.beckerhealth.dominio.consultas.Consulta;
 import dev.beckerhealth.dominio.consultas.ConsultaId;
 import dev.beckerhealth.dominio.notificacao.Notificacao;
-import dev.beckerhealth.dominio.prontuario.Exame;
-import dev.beckerhealth.dominio.prontuario.Prescricao;
 import dev.beckerhealth.dominio.prontuario.Prontuario;
 import dev.beckerhealth.dominio.relatorios.Relatorio;
 
@@ -206,8 +204,23 @@ public class JpaMapeador extends ModelMapper {
                 if (source == null) return null;
                 var consultaJpa = new ConsultaJpa();
                 consultaJpa.id = source.getId() != null ? source.getId().getId() : null;
-                consultaJpa.paciente = map(source.getPaciente(), PacienteJpa.class);
-                consultaJpa.medico = map(source.getMedico(), MedicoJpa.class);
+                
+                // Buscar PacienteJpa do banco se tiver apenas o ID
+                if (source.getPaciente() != null && source.getPaciente().getId() != null) {
+                    consultaJpa.paciente = pacienteRepositorio.findById(source.getPaciente().getId())
+                            .orElseThrow(() -> new IllegalArgumentException("Paciente não encontrado com ID: " + source.getPaciente().getId()));
+                } else {
+                    consultaJpa.paciente = map(source.getPaciente(), PacienteJpa.class);
+                }
+                
+                // Buscar MedicoJpa do banco se tiver apenas o ID
+                if (source.getMedico() != null && source.getMedico().getId() != null) {
+                    consultaJpa.medico = medicoRepositorio.findById(source.getMedico().getId())
+                            .orElseThrow(() -> new IllegalArgumentException("Médico não encontrado com ID: " + source.getMedico().getId()));
+                } else {
+                    consultaJpa.medico = map(source.getMedico(), MedicoJpa.class);
+                }
+                
                 consultaJpa.dataConsulta = source.getDataConsulta();
                 consultaJpa.horaConsulta = source.getHoraConsulta();
                 consultaJpa.tipo = map(source.getTipo(), ConsultaJpa.TipoConsulta.class);
@@ -262,9 +275,24 @@ public class JpaMapeador extends ModelMapper {
                 if (source == null) return null;
                 var prontuarioJpa = new ProntuarioJpa();
                 prontuarioJpa.id = source.getId();
-                prontuarioJpa.paciente = map(source.getPaciente(), PacienteJpa.class);
-                prontuarioJpa.medicoResponsavel = source.getMedicoResponsavel() != null ?
-                        map(source.getMedicoResponsavel(), MedicoJpa.class) : null;
+                
+                // Buscar PacienteJpa do banco se tiver apenas o ID
+                if (source.getPaciente() != null && source.getPaciente().getId() != null) {
+                    prontuarioJpa.paciente = pacienteRepositorio.findById(source.getPaciente().getId())
+                            .orElseThrow(() -> new IllegalArgumentException("Paciente não encontrado com ID: " + source.getPaciente().getId()));
+                } else {
+                    prontuarioJpa.paciente = map(source.getPaciente(), PacienteJpa.class);
+                }
+                
+                // Buscar MedicoJpa do banco se tiver apenas o ID
+                if (source.getMedicoResponsavel() != null && source.getMedicoResponsavel().getId() != null) {
+                    prontuarioJpa.medicoResponsavel = medicoRepositorio.findById(source.getMedicoResponsavel().getId())
+                            .orElse(null); // Médico é opcional, então pode ser null
+                } else {
+                    prontuarioJpa.medicoResponsavel = source.getMedicoResponsavel() != null ?
+                            map(source.getMedicoResponsavel(), MedicoJpa.class) : null;
+                }
+                
                 prontuarioJpa.anamnese = source.getAnamnese();
                 prontuarioJpa.diagnostico = source.getDiagnostico();
                 prontuarioJpa.prescricao = source.getPrescricao();
@@ -307,7 +335,15 @@ public class JpaMapeador extends ModelMapper {
                 if (source == null) return null;
                 var notificacaoJpa = new NotificacaoJpa();
                 notificacaoJpa.id = source.getId();
-                notificacaoJpa.destinatario = map(source.getDestinatario(), UsuarioJpa.class);
+                
+                // Buscar UsuarioJpa do banco se tiver apenas o ID
+                if (source.getDestinatario() != null && source.getDestinatario().getId() != null) {
+                    notificacaoJpa.destinatario = usuarioRepositorio.findById(source.getDestinatario().getId())
+                            .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado com ID: " + source.getDestinatario().getId()));
+                } else {
+                    notificacaoJpa.destinatario = map(source.getDestinatario(), UsuarioJpa.class);
+                }
+                
                 notificacaoJpa.titulo = source.getTitulo();
                 notificacaoJpa.mensagem = source.getMensagem();
                 notificacaoJpa.dataEnvio = source.getDataEnvio();
@@ -405,81 +441,6 @@ public class JpaMapeador extends ModelMapper {
             @Override
             protected RelatorioJpa.StatusRelatorio convert(Relatorio.StatusRelatorio source) {
                 return source != null ? RelatorioJpa.StatusRelatorio.valueOf(source.name()) : null;
-            }
-        });
-
-        // Mapeamentos para Exame
-        addConverter(new AbstractConverter<ExameJpa, Exame>() {
-            @Override
-            protected Exame convert(ExameJpa source) {
-                if (source == null) return null;
-                var prontuario = map(source.prontuario, Prontuario.class);
-                return new Exame(source.id, prontuario, source.consultaId, source.nomeExame,
-                        source.descricao, source.dataSolicitacao, source.resultado,
-                        map(source.status, Exame.StatusExame.class), source.dataLiberacao,
-                        source.observacoesMedico);
-            }
-        });
-
-        addConverter(new AbstractConverter<Exame, ExameJpa>() {
-            @Override
-            protected ExameJpa convert(Exame source) {
-                if (source == null) return null;
-                var exameJpa = new ExameJpa();
-                exameJpa.id = source.getId();
-                exameJpa.prontuario = map(source.getProntuario(), ProntuarioJpa.class);
-                exameJpa.consultaId = source.getConsultaId();
-                exameJpa.nomeExame = source.getNomeExame();
-                exameJpa.descricao = source.getDescricao();
-                exameJpa.dataSolicitacao = source.getDataSolicitacao();
-                exameJpa.resultado = source.getResultado();
-                exameJpa.status = map(source.getStatus(), ExameJpa.StatusExame.class);
-                exameJpa.dataLiberacao = source.getDataLiberacao();
-                exameJpa.observacoesMedico = source.getObservacoesMedico();
-                return exameJpa;
-            }
-        });
-
-        addConverter(new AbstractConverter<ExameJpa.StatusExame, Exame.StatusExame>() {
-            @Override
-            protected Exame.StatusExame convert(ExameJpa.StatusExame source) {
-                return source != null ? Exame.StatusExame.valueOf(source.name()) : null;
-            }
-        });
-
-        addConverter(new AbstractConverter<Exame.StatusExame, ExameJpa.StatusExame>() {
-            @Override
-            protected ExameJpa.StatusExame convert(Exame.StatusExame source) {
-                return source != null ? ExameJpa.StatusExame.valueOf(source.name()) : null;
-            }
-        });
-
-        // Mapeamentos para Prescricao
-        addConverter(new AbstractConverter<PrescricaoJpa, Prescricao>() {
-            @Override
-            protected Prescricao convert(PrescricaoJpa source) {
-                if (source == null) return null;
-                var prontuario = map(source.prontuario, Prontuario.class);
-                return new Prescricao(source.id, prontuario, source.medicamentos,
-                        source.posologia, source.dataEmissao, source.dataValidade,
-                        source.assinaturaMedica, source.observacoes);
-            }
-        });
-
-        addConverter(new AbstractConverter<Prescricao, PrescricaoJpa>() {
-            @Override
-            protected PrescricaoJpa convert(Prescricao source) {
-                if (source == null) return null;
-                var prescricaoJpa = new PrescricaoJpa();
-                prescricaoJpa.id = source.getId();
-                prescricaoJpa.prontuario = map(source.getProntuario(), ProntuarioJpa.class);
-                prescricaoJpa.medicamentos = source.getMedicamentos();
-                prescricaoJpa.posologia = source.getPosologia();
-                prescricaoJpa.dataEmissao = source.getDataEmissao();
-                prescricaoJpa.dataValidade = source.getDataValidade();
-                prescricaoJpa.assinaturaMedica = source.getAssinaturaMedica();
-                prescricaoJpa.observacoes = source.getObservacoes();
-                return prescricaoJpa;
             }
         });
     }

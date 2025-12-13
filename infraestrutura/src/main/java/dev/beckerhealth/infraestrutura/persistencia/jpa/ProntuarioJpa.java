@@ -1,10 +1,8 @@
 package dev.beckerhealth.infraestrutura.persistencia.jpa;
 
 import jakarta.persistence.*;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "prontuarios")
@@ -14,9 +12,11 @@ public class ProntuarioJpa {
     public Long id;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "paciente_id", nullable = false)
     public PacienteJpa paciente;
 
     @ManyToOne
+    @JoinColumn(name = "medico_responsavel_id")
     public MedicoJpa medicoResponsavel;
 
     @Column(nullable = false, columnDefinition = "TEXT")

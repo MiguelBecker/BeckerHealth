@@ -77,33 +77,6 @@ CREATE TABLE IF NOT EXISTS notificacoes (
     FOREIGN KEY (destinatario_id) REFERENCES usuarios(id)
 );
 
-CREATE TABLE IF NOT EXISTS exames (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    prontuario_id BIGINT NOT NULL,
-    consulta_vinculada_id BIGINT NOT NULL,
-    nome_exame VARCHAR(255) NOT NULL,
-    descricao TEXT,
-    data_solicitacao TIMESTAMP NOT NULL,
-    resultado TEXT,
-    status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE',
-    data_liberacao TIMESTAMP,
-    observacoes_medico VARCHAR(500),
-    FOREIGN KEY (prontuario_id) REFERENCES prontuarios(id),
-    FOREIGN KEY (consulta_vinculada_id) REFERENCES consultas(id)
-);
-
-CREATE TABLE IF NOT EXISTS prescricoes (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    prontuario_id BIGINT NOT NULL,
-    medicamentos TEXT NOT NULL,
-    posologia TEXT,
-    data_emissao DATE NOT NULL,
-    data_validade DATE NOT NULL,
-    assinatura_medica VARCHAR(255) NOT NULL,
-    observacoes VARCHAR(500),
-    FOREIGN KEY (prontuario_id) REFERENCES prontuarios(id)
-);
-
 -- Tabela de Relatórios
 CREATE TABLE IF NOT EXISTS relatorios (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
