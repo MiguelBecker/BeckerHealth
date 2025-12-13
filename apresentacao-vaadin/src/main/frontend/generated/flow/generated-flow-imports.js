@@ -2,7 +2,9 @@ import { injectGlobalCss } from 'Frontend/generated/jar-resources/theme-util.js'
 
 import { css, unsafeCSS, registerStyles } from '@vaadin/vaadin-themable-mixin';
 import $cssFromFile_0 from 'Frontend/styles/perfil-card.css?inline';
-import $cssFromFile_1 from 'Frontend/styles/dashboard-paciente.css?inline';
+import $cssFromFile_1 from 'Frontend/styles/dashboard-admin.css?inline';
+import $cssFromFile_2 from 'Frontend/styles/dashboard-medico.css?inline';
+import $cssFromFile_3 from 'Frontend/styles/dashboard-paciente.css?inline';
 import '@vaadin/field-highlighter/theme/lumo/vaadin-field-highlighter.js';
 import '@vaadin/common-frontend/ConnectionIndicator.js';
 import '@vaadin/polymer-legacy-adapter/style-modules.js';
@@ -97,6 +99,10 @@ import '@vaadin/vaadin-lumo-styles/vaadin-iconset.js';
 injectGlobalCss($cssFromFile_0.toString(), 'CSSImport end', document);
 
 injectGlobalCss($cssFromFile_1.toString(), 'CSSImport end', document);
+
+injectGlobalCss($cssFromFile_2.toString(), 'CSSImport end', document);
+
+injectGlobalCss($cssFromFile_3.toString(), 'CSSImport end', document);
 const loadOnDemand = (key) => { return Promise.resolve(0); }
 window.Vaadin = window.Vaadin || {};
 window.Vaadin.Flow = window.Vaadin.Flow || {};

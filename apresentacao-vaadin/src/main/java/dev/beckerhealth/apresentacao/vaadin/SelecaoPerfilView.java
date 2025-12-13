@@ -75,10 +75,19 @@ public class SelecaoPerfilView extends VerticalLayout {
     
     private void navegarParaPerfil(PerfilUsuario perfil) {
         getUI().ifPresent(ui -> {
-            if (perfil == PerfilUsuario.PACIENTE) {
-                ui.navigate("paciente/dashboard");
-            } else {
-                ui.navigate(MainView.class);
+            switch (perfil) {
+                case PACIENTE:
+                    ui.navigate("paciente/dashboard");
+                    break;
+                case MEDICO:
+                    ui.navigate("medico/dashboard");
+                    break;
+                case ADMINISTRADOR:
+                    ui.navigate("admin/dashboard");
+                    break;
+                default:
+                    ui.navigate(MainView.class);
+                    break;
             }
         });
     }
