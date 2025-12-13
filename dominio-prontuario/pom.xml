@@ -25,6 +25,19 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- Dependência interna: domínio consultas -->
+        <dependency>
+            <groupId>dev.beckerhealth</groupId>
+            <artifactId>dominio-consultas</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Commons Lang -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>

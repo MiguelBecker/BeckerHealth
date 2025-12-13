@@ -11,7 +11,6 @@ import dev.beckerhealth.infraestrutura.persistencia.jpa.ConsultaJpaRepository;
 import dev.beckerhealth.infraestrutura.persistencia.jpa.JpaMapeador;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -87,6 +86,7 @@ class ConsultaRepositoryImpl implements ConsultaRepository, ConsultaRepositorioA
     @Override
     public List<ConsultaResumo> pesquisarResumos() {
         return repositorio.findAll().stream()
+                .filter(c -> c.status == ConsultaJpa.StatusConsulta.AGENDADA) // Filtrar apenas consultas agendadas
                 .map(this::mapearParaResumo)
                 .collect(Collectors.toList());
     }

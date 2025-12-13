@@ -11,6 +11,8 @@ import dev.beckerhealth.dominio.consultas.Consulta;
 import dev.beckerhealth.dominio.consultas.ConsultaId;
 import dev.beckerhealth.dominio.notificacao.Notificacao;
 import dev.beckerhealth.dominio.prontuario.Prontuario;
+import dev.beckerhealth.dominio.prontuario.Exame;
+import dev.beckerhealth.dominio.prontuario.Prescricao;
 import dev.beckerhealth.dominio.relatorios.Relatorio;
 
 @Component
@@ -441,6 +443,57 @@ public class JpaMapeador extends ModelMapper {
             @Override
             protected RelatorioJpa.StatusRelatorio convert(Relatorio.StatusRelatorio source) {
                 return source != null ? RelatorioJpa.StatusRelatorio.valueOf(source.name()) : null;
+            }
+        });
+
+        // Mapeadores para Exame
+        addConverter(new AbstractConverter<ExameJpa, Exame>() {
+            @Override
+            protected Exame convert(ExameJpa source) {
+                if (source == null) return null;
+                return new Exame(source.id, 
+                    source.consultaId != null ? new ConsultaId(source.consultaId) : null,
+                    source.tipo, source.resultado, source.dataExame, 
+                    source.liberado != null ? source.liberado : false);
+            }
+        });
+
+        addConverter(new AbstractConverter<Exame, ExameJpa>() {
+            @Override
+            protected ExameJpa convert(Exame source) {
+                if (source == null) return null;
+                var exameJpa = new ExameJpa();
+                exameJpa.id = source.getId();
+                exameJpa.consultaId = source.getConsultaId() != null ? source.getConsultaId().getId() : null;
+                exameJpa.tipo = source.getTipo();
+                exameJpa.resultado = source.getResultado();
+                exameJpa.dataExame = source.getDataExame();
+                exameJpa.liberado = source.isLiberado();
+                return exameJpa;
+            }
+        });
+
+        // Mapeadores para Prescricao
+        addConverter(new AbstractConverter<PrescricaoJpa, Prescricao>() {
+            @Override
+            protected Prescricao convert(PrescricaoJpa source) {
+                if (source == null) return null;
+                return new Prescricao(source.id, source.prontuarioId, source.conteudo, 
+                    source.validade, source.assinaturaMedica);
+            }
+        });
+
+        addConverter(new AbstractConverter<Prescricao, PrescricaoJpa>() {
+            @Override
+            protected PrescricaoJpa convert(Prescricao source) {
+                if (source == null) return null;
+                var prescricaoJpa = new PrescricaoJpa();
+                prescricaoJpa.id = source.getId();
+                prescricaoJpa.prontuarioId = source.getProntuarioId();
+                prescricaoJpa.conteudo = source.getConteudo();
+                prescricaoJpa.validade = source.getValidade();
+                prescricaoJpa.assinaturaMedica = source.getAssinaturaMedica();
+                return prescricaoJpa;
             }
         });
     }
