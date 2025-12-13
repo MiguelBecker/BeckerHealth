@@ -1,6 +1,5 @@
 package dev.beckerhealth.apresentacao.vaadin.paciente;
 
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
@@ -27,7 +26,7 @@ public class HeaderPaciente extends HorizontalLayout {
         logoLayout.setSpacing(false);
         
         Image logo = new Image("/images/logo-becker-health.jpeg", "Becker Health");
-        logo.setWidth("140px");
+        logo.setWidth("120px");
         logo.setHeight("auto");
         logo.getStyle().set("object-fit", "contain");
         
@@ -43,7 +42,7 @@ public class HeaderPaciente extends HorizontalLayout {
         Div notificacao = criarNotificacao();
         VerticalLayout userInfo = criarUserInfo();
         Div avatar = criarAvatar();
-        Button sair = criarBotaoSair();
+        Div sair = criarBotaoSair();
         
         infoLayout.add(notificacao, userInfo, avatar, sair);
         return infoLayout;
@@ -53,7 +52,7 @@ public class HeaderPaciente extends HorizontalLayout {
         Div avatar = new Div();
         avatar.getStyle().set("width", "40px");
         avatar.getStyle().set("height", "40px");
-        avatar.getStyle().set("background", "#3B82F6");
+        avatar.getStyle().set("background", "linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%)");
         avatar.getStyle().set("border-radius", "50%");
         avatar.getStyle().set("display", "flex");
         avatar.getStyle().set("align-items", "center");
@@ -61,6 +60,7 @@ public class HeaderPaciente extends HorizontalLayout {
         avatar.getStyle().set("color", "white");
         avatar.getStyle().set("font-weight", "600");
         avatar.getStyle().set("font-size", "14px");
+        avatar.getStyle().set("flex-shrink", "0");
         avatar.setText("MS");
         return avatar;
     }
@@ -69,26 +69,16 @@ public class HeaderPaciente extends HorizontalLayout {
         Div container = new Div();
         container.getStyle().set("position", "relative");
         container.getStyle().set("cursor", "pointer");
+        container.getStyle().set("width", "24px");
+        container.getStyle().set("height", "24px");
         
-        com.vaadin.flow.dom.Element svg = new com.vaadin.flow.dom.Element("svg");
-        svg.setAttribute("width", "24");
-        svg.setAttribute("height", "24");
-        svg.setAttribute("viewBox", "0 0 24 24");
-        svg.setAttribute("fill", "none");
-        svg.getStyle().set("stroke", "#6B7280");
-        svg.getStyle().set("stroke-width", "2");
-        svg.getStyle().set("stroke-linecap", "round");
-        svg.getStyle().set("stroke-linejoin", "round");
+        String svgContent = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" " +
+                "style=\"stroke: #6B7280; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;\">" +
+                "<path d=\"M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9\"></path>" +
+                "<path d=\"M13.73 21a2 2 0 0 1-3.46 0\"></path>" +
+                "</svg>";
         
-        com.vaadin.flow.dom.Element path1 = new com.vaadin.flow.dom.Element("path");
-        path1.setAttribute("d", "M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9");
-        svg.appendChild(path1);
-        
-        com.vaadin.flow.dom.Element path2 = new com.vaadin.flow.dom.Element("path");
-        path2.setAttribute("d", "M13.73 21a2 2 0 0 1-3.46 0");
-        svg.appendChild(path2);
-        
-        container.getElement().appendChild(svg);
+        container.getElement().setProperty("innerHTML", svgContent);
         
         Div badge = new Div();
         badge.getStyle().set("position", "absolute");
@@ -129,39 +119,39 @@ public class HeaderPaciente extends HorizontalLayout {
         return layout;
     }
     
-    private Button criarBotaoSair() {
-        Button sair = new Button();
-        sair.setText("Sair");
-        sair.getStyle().set("background", "transparent");
-        sair.getStyle().set("border", "1px solid #E5E7EB");
-        sair.getStyle().set("border-radius", "6px");
-        sair.getStyle().set("padding", "8px 16px");
-        sair.getStyle().set("color", "#6B7280");
-        sair.getStyle().set("font-size", "14px");
-        sair.getStyle().set("cursor", "pointer");
-        sair.getStyle().set("display", "flex");
-        sair.getStyle().set("align-items", "center");
-        sair.getStyle().set("gap", "8px");
+    private Div criarBotaoSair() {
+        Div buttonContainer = new Div();
+        buttonContainer.getStyle().set("background", "transparent");
+        buttonContainer.getStyle().set("border", "1px solid #E5E7EB");
+        buttonContainer.getStyle().set("border-radius", "6px");
+        buttonContainer.getStyle().set("padding", "8px 16px");
+        buttonContainer.getStyle().set("color", "#6B7280");
+        buttonContainer.getStyle().set("font-size", "14px");
+        buttonContainer.getStyle().set("cursor", "pointer");
+        buttonContainer.getStyle().set("display", "flex");
+        buttonContainer.getStyle().set("align-items", "center");
+        buttonContainer.getStyle().set("gap", "8px");
+        buttonContainer.getStyle().set("user-select", "none");
         
-        com.vaadin.flow.dom.Element svg = new com.vaadin.flow.dom.Element("svg");
-        svg.setAttribute("width", "16");
-        svg.setAttribute("height", "16");
-        svg.setAttribute("viewBox", "0 0 24 24");
-        svg.setAttribute("fill", "none");
-        svg.getStyle().set("stroke", "currentColor");
-        svg.getStyle().set("stroke-width", "2");
-        svg.getStyle().set("stroke-linecap", "round");
-        svg.getStyle().set("stroke-linejoin", "round");
-        svg.getStyle().set("margin-left", "8px");
+        Span texto = new Span("Sair");
+        texto.getStyle().set("font-size", "14px");
+        texto.getStyle().set("color", "#6B7280");
         
-        com.vaadin.flow.dom.Element path = new com.vaadin.flow.dom.Element("path");
-        path.setAttribute("d", "M9 18l6-6-6-6");
-        svg.appendChild(path);
+        String svgContent = "<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" " +
+                "style=\"stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;\">" +
+                "<path d=\"M9 18l6-6-6-6\"></path>" +
+                "</svg>";
         
-        sair.getElement().appendChild(svg);
-        sair.addClickListener(e -> sair.getUI().ifPresent(ui -> ui.navigate(SelecaoPerfilView.class)));
+        Div svgDiv = new Div();
+        svgDiv.getElement().setProperty("innerHTML", svgContent);
+        svgDiv.getStyle().set("display", "inline-block");
+        svgDiv.getStyle().set("color", "#6B7280");
         
-        return sair;
+        buttonContainer.add(texto, svgDiv);
+        buttonContainer.addClickListener(e -> 
+            buttonContainer.getUI().ifPresent(ui -> ui.navigate(SelecaoPerfilView.class))
+        );
+        
+        return buttonContainer;
     }
 }
-

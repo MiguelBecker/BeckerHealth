@@ -6,15 +6,15 @@ import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-    features = "src/test/resources/features",       // Caminho onde estão os .feature
-    glue = "com.beckerhealth.steps",                // Pacote dos Steps
+    features = "src/test/resources/features",
+    glue = "com.beckerhealth.steps",
     plugin = {
-        "pretty",                                   // Saída legível no console
-        "html:target/cucumber-report.html",         // Relatório em HTML
-        "json:target/cucumber-report.json"          // Relatório em JSON
+        "pretty",
+        "html:target/cucumber-report.html",
+        "json:target/cucumber-report.json"
     },
     monochrome = true,
-    snippets = CucumberOptions.SnippetType.CAMELCASE // Gera nomes de métodos no padrão camelCase
+    snippets = CucumberOptions.SnippetType.CAMELCASE
 )
 public class CucumberTest {
 }

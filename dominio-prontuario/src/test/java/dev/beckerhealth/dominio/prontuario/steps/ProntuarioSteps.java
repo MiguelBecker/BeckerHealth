@@ -18,8 +18,8 @@ public class ProntuarioSteps {
 
     @Dado("que existe um paciente e um médico")
     public void queExisteUmPacienteEMedico() {
-        paciente = new Paciente(); // mock simples
-        medico = new Medico();     // mock simples
+        paciente = new Paciente();
+        medico = new Medico();
     }
 
     @Quando("o médico registrar um diagnóstico {string} no prontuário")

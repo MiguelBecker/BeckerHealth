@@ -26,7 +26,6 @@ public class GestaoConsultasSteps {
     private Exception excecaoCapturada;
 
     public GestaoConsultasSteps() {
-        // Fake repository em memória
         this.consultaRepositoryFake = new ConsultaRepository() {
             private List<Consulta> consultas = new ArrayList<>();
             private Long idCounter = 1L;
@@ -88,7 +87,6 @@ public class GestaoConsultasSteps {
         this.consultaService = new ConsultaService(consultaRepositoryFake);
     }
 
-    // ========= Cenário 1 =========
     @Dado("que existe um médico com horário livre às {int}:{int}")
     public void medicoComHorarioLivre(int hora, int minuto) {
         medico = new Medico();
@@ -117,7 +115,6 @@ public class GestaoConsultasSteps {
         assertEquals(Consulta.StatusConsulta.AGENDADA, consultaAgendada.getStatus());
     }
 
-    // ========= Cenário 2 =========
     @Dado("que o médico já possui uma consulta às {int}:{int}")
     public void medicoJaPossuiConsulta(int hora, int minuto) {
         Consulta consultaExistente = new Consulta();
@@ -154,7 +151,6 @@ public class GestaoConsultasSteps {
         assertTrue(excecaoCapturada instanceof IllegalStateException);
     }
 
-    // ========= Cenário 3 =========
     @Dado("que o paciente possui uma consulta marcada para daqui a {int} horas")
     public void pacientePossuiConsultaDaquiHoras(int horas) {
         consultaAgendada = new Consulta();
@@ -189,7 +185,6 @@ public class GestaoConsultasSteps {
         assertTrue("Esperava penalidade (exceção)", excecaoCapturada instanceof IllegalStateException);
     }
 
-    // ========= Cenário 5 =========
     @Dado("que o médico já possui uma consulta de rotina às {int}:{int}")
     public void medicoJaPossuiConsultaDeRotina(int hora, int minuto) {
         Consulta rotina = new Consulta();
@@ -222,10 +217,8 @@ public class GestaoConsultasSteps {
         assertEquals(Consulta.TipoConsulta.URGENCIA, consultaAgendada.getTipo());
     }
 
-    // ========= Cenário 6 =========
     @Dado("o médico tem horário livre às {int}:{int}")
     public void medicoTemHorarioLivre(int hora, int minuto) {
-        // apenas validação: sem salvar nada, o horário estará livre
     }
 
     @Quando("o paciente reagenda a consulta para às {int}:{int}")

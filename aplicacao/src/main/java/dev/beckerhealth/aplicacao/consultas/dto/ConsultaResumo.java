@@ -30,7 +30,6 @@ public class ConsultaResumo {
         this.status = status;
     }
 
-    // Getters
     public Long getId() { return id; }
     public String getPacienteNome() { return pacienteNome; }
     public String getPacienteCpf() { return pacienteCpf; }
@@ -41,7 +40,6 @@ public class ConsultaResumo {
     public String getTipo() { return tipo; }
     public String getStatus() { return status; }
 
-    // Setters
     public void setId(Long id) { this.id = id; }
     public void setPacienteNome(String pacienteNome) { this.pacienteNome = pacienteNome; }
     public void setPacienteCpf(String pacienteCpf) { this.pacienteCpf = pacienteCpf; }
@@ -52,7 +50,6 @@ public class ConsultaResumo {
     public void setTipo(String tipo) { this.tipo = tipo; }
     public void setStatus(String status) { this.status = status; }
 
-    // Builder
     public static Builder builder() {
         return new Builder();
     }

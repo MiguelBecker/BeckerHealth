@@ -1,8 +1,8 @@
 package dev.beckerhealth.apresentacao.vaadin.paciente;
 
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -10,8 +10,10 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.dependency.CssImport;
+import dev.beckerhealth.aplicacao.consultas.AgendarConsulta;
 import dev.beckerhealth.aplicacao.consultas.ConsultaServicoAplicacao;
 import dev.beckerhealth.aplicacao.consultas.dto.ConsultaResumo;
+import dev.beckerhealth.dominio.consultas.ConsultaRepository;
 
 import java.util.List;
 
@@ -21,10 +23,16 @@ import java.util.List;
 public class DashboardPacienteView extends VerticalLayout {
     
     private final ConsultaServicoAplicacao consultaServicoAplicacao;
+    private final AgendarConsulta agendarConsulta;
+    private final ConsultaRepository consultaRepository;
     private VerticalLayout conteudoLayout;
     
-    public DashboardPacienteView(ConsultaServicoAplicacao consultaServicoAplicacao) {
+    public DashboardPacienteView(ConsultaServicoAplicacao consultaServicoAplicacao,
+                                 AgendarConsulta agendarConsulta,
+                                 ConsultaRepository consultaRepository) {
         this.consultaServicoAplicacao = consultaServicoAplicacao;
+        this.agendarConsulta = agendarConsulta;
+        this.consultaRepository = consultaRepository;
         setPadding(false);
         setSpacing(false);
         setSizeFull();
@@ -46,10 +54,10 @@ public class DashboardPacienteView extends VerticalLayout {
         layout.getStyle().set("background", "#F9FAFB");
         
         layout.add(
-            new ResumoCard("Próximas Consultas", "2 Agendadas este mês", "#3B82F6", "calendar"),
-            new ResumoCard("Exames Pendentes", "1 Aguardando realização", "#F59E0B", "exclamation"),
-            new ResumoCard("Resultados Disponíveis", "1 Liberados pelo médico", "#10B981", "document"),
-            new ResumoCard("Notificações", "3 Não lidas", "#8B5CF6", "bell")
+            new ResumoCard("Próximas Consultas", "2", "Agendadas este mês", "#3B82F6", "calendar"),
+            new ResumoCard("Exames Pendentes", "1", "Aguardando realização", "#F59E0B", "exclamation"),
+            new ResumoCard("Resultados Disponíveis", "1", "Liberados pelo médico", "#10B981", "document"),
+            new ResumoCard("Notificações", "3", "Não lidas", "#8B5CF6", "bell")
         );
         
         return layout;
@@ -60,8 +68,9 @@ public class DashboardPacienteView extends VerticalLayout {
         tabs.addClassNames("dashboard-tabs");
         tabs.setWidthFull();
         tabs.getStyle().set("background", "white");
-        tabs.getStyle().set("padding", "0 32px");
+        tabs.getStyle().set("padding", "0");
         tabs.getStyle().set("border-bottom", "1px solid #E5E7EB");
+        tabs.getStyle().set("box-shadow", "none");
         
         Tab minhasConsultas = new Tab("Minhas Consultas");
         Tab exames = new Tab("Exames");
@@ -118,7 +127,7 @@ public class DashboardPacienteView extends VerticalLayout {
         titulo.getStyle().set("font-weight", "600");
         titulo.getStyle().set("color", "#111827");
         
-        Button agendar = new Button("+ Agendar Consulta");
+        Div agendar = new Div();
         agendar.getStyle().set("background", "#3B82F6");
         agendar.getStyle().set("color", "white");
         agendar.getStyle().set("border", "none");
@@ -127,22 +136,36 @@ public class DashboardPacienteView extends VerticalLayout {
         agendar.getStyle().set("font-size", "14px");
         agendar.getStyle().set("font-weight", "600");
         agendar.getStyle().set("cursor", "pointer");
+        agendar.getStyle().set("display", "inline-flex");
+        agendar.getStyle().set("align-items", "center");
+        agendar.getStyle().set("gap", "8px");
+        agendar.getStyle().set("user-select", "none");
         
-        com.vaadin.flow.dom.Element svg = new com.vaadin.flow.dom.Element("svg");
-        svg.setAttribute("width", "16");
-        svg.setAttribute("height", "16");
-        svg.setAttribute("viewBox", "0 0 24 24");
-        svg.setAttribute("fill", "none");
-        svg.getStyle().set("stroke", "white");
-        svg.getStyle().set("stroke-width", "2.5");
-        svg.getStyle().set("stroke-linecap", "round");
-        svg.getStyle().set("stroke-linejoin", "round");
-        svg.getStyle().set("margin-right", "8px");
+        // Criar ícone SVG
+        Div iconDiv = new Div();
+        String svgContent = "<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" " +
+                "style=\"stroke: white; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;\">" +
+                "<path d=\"M12 5v14m7-7H5\"></path>" +
+                "</svg>";
+        iconDiv.getElement().setProperty("innerHTML", svgContent);
+        iconDiv.getStyle().set("display", "inline-block");
         
-        com.vaadin.flow.dom.Element path = new com.vaadin.flow.dom.Element("path");
-        path.setAttribute("d", "M12 5v14m7-7H5");
-        svg.appendChild(path);
-        agendar.getElement().appendChild(svg);
+        // Criar texto
+        Span texto = new Span("Agendar Consulta");
+        texto.getStyle().set("color", "white");
+        
+        agendar.add(iconDiv, texto);
+        
+        agendar.addClickListener(e -> {
+            getUI().ifPresent(ui -> {
+                AgendarConsultaDialog dialog = new AgendarConsultaDialog(
+                    agendarConsulta,
+                    1L, // TODO: Pegar ID do paciente logado
+                    "Maria Silva" // TODO: Pegar nome do paciente logado
+                );
+                dialog.open();
+            });
+        });
         
         headerLayout.add(titulo, agendar);
         
@@ -160,7 +183,13 @@ public class DashboardPacienteView extends VerticalLayout {
             empty.getStyle().set("color", "#6B7280");
             consultasLayout.add(empty);
         } else {
-            consultas.forEach(consulta -> consultasLayout.add(new ConsultaCard(consulta)));
+            consultas.forEach(consulta -> {
+                consultasLayout.add(new ConsultaCard(
+                    consulta,
+                    consultaRepository,
+                    () -> atualizarConteudoConsultas()
+                ));
+            });
         }
         
         conteudoLayout.add(headerLayout, consultasLayout);

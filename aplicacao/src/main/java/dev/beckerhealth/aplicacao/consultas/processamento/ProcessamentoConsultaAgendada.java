@@ -13,8 +13,6 @@ public class ProcessamentoConsultaAgendada extends ProcessamentoConsultaTemplate
 
     @Override
     protected void executarProcessamento(Consulta consulta) {
-        // Processar agendamento
-        // Publicar evento
         ConsultaAgendadaEvento evento = new ConsultaAgendadaEvento(consulta);
         eventoBarramento.postar(evento);
     }

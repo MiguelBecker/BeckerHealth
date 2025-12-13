@@ -1,6 +1,7 @@
 package dev.beckerhealth.apresentacao.vaadin.paciente;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
@@ -8,12 +9,24 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import dev.beckerhealth.aplicacao.consultas.dto.ConsultaResumo;
+import dev.beckerhealth.dominio.consultas.Consulta;
+import dev.beckerhealth.dominio.consultas.ConsultaRepository;
+import dev.beckerhealth.dominio.consultas.ConsultaId;
 
 import java.time.format.DateTimeFormatter;
 
 public class ConsultaCard extends VerticalLayout {
     
-    public ConsultaCard(ConsultaResumo consulta) {
+    private final ConsultaResumo consulta;
+    private final ConsultaRepository consultaRepository;
+    private final Runnable onAtualizado;
+    
+    public ConsultaCard(ConsultaResumo consulta, 
+                       ConsultaRepository consultaRepository,
+                       Runnable onAtualizado) {
+        this.consulta = consulta;
+        this.consultaRepository = consultaRepository;
+        this.onAtualizado = onAtualizado;
         addClassNames("consulta-card");
         setPadding(false);
         setSpacing(false);
@@ -22,6 +35,7 @@ public class ConsultaCard extends VerticalLayout {
         getStyle().set("padding", "20px");
         getStyle().set("box-shadow", "0 1px 3px rgba(0,0,0,0.1)");
         getStyle().set("margin-bottom", "16px");
+        getStyle().set("width", "100%");
         
         H3 medicoNome = new H3(consulta.getMedicoNome());
         medicoNome.getStyle().set("margin", "0 0 12px");
@@ -32,15 +46,17 @@ public class ConsultaCard extends VerticalLayout {
         HorizontalLayout tagsLayout = new HorizontalLayout();
         tagsLayout.setSpacing(true);
         tagsLayout.setPadding(false);
+        tagsLayout.getStyle().set("margin-bottom", "12px");
         
-        Span especialidade = criarTag(consulta.getMedicoEspecialidade() != null ? consulta.getMedicoEspecialidade() : "Geral", "#6B7280", "#F3F4F6");
-        Span tipo = criarTag(consulta.getTipo(), getCorTipo(consulta.getTipo()), getCorFundoTipo(consulta.getTipo()));
+        Span especialidade = criarTag(consulta.getMedicoEspecialidade() != null ? consulta.getMedicoEspecialidade() : "Geral", "#111827", "#F3F4F6");
+        Span tipo = criarTag(consulta.getTipo(), getCorTexto(consulta.getTipo()), getCorFundoTipo(consulta.getTipo()));
         tagsLayout.add(especialidade, tipo);
         
         HorizontalLayout infoLayout = new HorizontalLayout();
         infoLayout.setSpacing(true);
         infoLayout.setPadding(false);
         infoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+        infoLayout.getStyle().set("margin-bottom", "12px");
         
         Div dataInfo = criarInfoComIcone("calendar", formatarData(consulta.getDataConsulta()));
         Div horaInfo = criarInfoComIcone("clock", formatarHora(consulta.getHoraConsulta()));
@@ -49,18 +65,35 @@ public class ConsultaCard extends VerticalLayout {
         Span convenio = new Span("Convênio: Particular");
         convenio.getStyle().set("font-size", "14px");
         convenio.getStyle().set("color", "#6B7280");
-        convenio.getStyle().set("margin-top", "12px");
+        convenio.getStyle().set("margin-bottom", "16px");
         
         HorizontalLayout botoesLayout = new HorizontalLayout();
         botoesLayout.setSpacing(true);
         botoesLayout.setPadding(false);
-        botoesLayout.getStyle().set("margin-top", "16px");
         
         Button reagendar = criarBotaoSecundario("Reagendar");
+        reagendar.addClickListener(e -> abrirDialogoReagendar());
+        
         Button cancelar = criarBotaoCancelar("Cancelar");
+        cancelar.addClickListener(e -> abrirDialogoCancelar());
+        
         botoesLayout.add(reagendar, cancelar);
         
-        add(medicoNome, tagsLayout, infoLayout, convenio, botoesLayout);
+        HorizontalLayout cardLayout = new HorizontalLayout();
+        cardLayout.setWidthFull();
+        cardLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
+        cardLayout.setAlignItems(FlexComponent.Alignment.START);
+        cardLayout.setPadding(false);
+        cardLayout.setSpacing(true);
+        
+        VerticalLayout leftContent = new VerticalLayout();
+        leftContent.setPadding(false);
+        leftContent.setSpacing(false);
+        leftContent.setWidth(null);
+        leftContent.add(medicoNome, tagsLayout, infoLayout, convenio);
+        
+        cardLayout.add(leftContent, botoesLayout);
+        add(cardLayout);
     }
     
     private Span criarTag(String texto, String corTexto, String corFundo) {
@@ -131,12 +164,12 @@ public class ConsultaCard extends VerticalLayout {
         return btn;
     }
     
-    private String getCorTipo(String tipo) {
+    private String getCorTexto(String tipo) {
         return switch (tipo != null ? tipo.toUpperCase() : "") {
-            case "ROTINA" -> "#10B981";
-            case "RETORNO" -> "#3B82F6";
-            case "URGENCIA" -> "#EF4444";
-            default -> "#6B7280";
+            case "ROTINA" -> "#111827";
+            case "RETORNO" -> "#111827";
+            case "URGENCIA" -> "#111827";
+            default -> "#111827";
         };
     }
     
@@ -157,6 +190,42 @@ public class ConsultaCard extends VerticalLayout {
     private String formatarHora(java.time.LocalTime hora) {
         if (hora == null) return "";
         return hora.format(DateTimeFormatter.ofPattern("HH:mm"));
+    }
+    
+    private void abrirDialogoReagendar() {
+        ReagendarConsultaDialog dialog = new ReagendarConsultaDialog(
+            consulta,
+            consultaRepository,
+            onAtualizado
+        );
+        dialog.open();
+    }
+    
+    private void abrirDialogoCancelar() {
+        ConfirmDialog confirmDialog = new ConfirmDialog();
+        confirmDialog.setHeader("Cancelar Consulta");
+        confirmDialog.setText("Tem certeza que deseja cancelar esta consulta? Esta ação não pode ser desfeita.");
+        confirmDialog.setCancelable(true);
+        confirmDialog.setConfirmText("Sim, Cancelar");
+        confirmDialog.setCancelText("Não");
+        confirmDialog.setConfirmButtonTheme("error primary");
+        
+        confirmDialog.addConfirmListener(e -> {
+            try {
+                Consulta consultaEntity = consultaRepository.buscarPorId(new ConsultaId(consulta.getId()))
+                    .orElseThrow(() -> new IllegalArgumentException("Consulta não encontrada"));
+                
+                consultaEntity.setStatus(Consulta.StatusConsulta.CANCELADA);
+                consultaRepository.salvar(consultaEntity);
+                
+                onAtualizado.run();
+                getUI().ifPresent(ui -> ui.getPage().reload());
+            } catch (Exception ex) {
+                // Tratar erro
+            }
+        });
+        
+        confirmDialog.open();
     }
 }
 

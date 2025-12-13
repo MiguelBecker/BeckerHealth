@@ -3,11 +3,13 @@ package dev.beckerhealth.apresentacao.vaadin.paciente;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class ResumoCard extends VerticalLayout {
     
-    public ResumoCard(String titulo, String valor, String cor, String tipoIcone) {
+    public ResumoCard(String titulo, String valor, String descricao, String cor, String tipoIcone) {
         addClassNames("resumo-card");
         setPadding(false);
         setSpacing(false);
@@ -16,53 +18,75 @@ public class ResumoCard extends VerticalLayout {
         getStyle().set("border-radius", "12px");
         getStyle().set("padding", "20px");
         getStyle().set("box-shadow", "0 1px 3px rgba(0,0,0,0.1)");
+        getStyle().set("position", "relative");
         
-        Div iconContainer = criarIcone(cor, tipoIcone);
+        HorizontalLayout headerLayout = new HorizontalLayout();
+        headerLayout.setWidthFull();
+        headerLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
+        headerLayout.setAlignItems(FlexComponent.Alignment.START);
+        headerLayout.setPadding(false);
+        headerLayout.setSpacing(false);
+        
         H3 tituloH3 = new H3(titulo);
-        tituloH3.getStyle().set("margin", "0 0 8px");
+        tituloH3.getStyle().set("margin", "0");
         tituloH3.getStyle().set("font-size", "14px");
         tituloH3.getStyle().set("font-weight", "500");
-        tituloH3.getStyle().set("color", "#6B7280");
+        tituloH3.getStyle().set("color", "#111827");
         
-        Span valorSpan = new Span(valor);
-        valorSpan.getStyle().set("font-size", "20px");
-        valorSpan.getStyle().set("font-weight", "600");
-        valorSpan.getStyle().set("color", "#111827");
+        Div iconContainer = criarIcone(cor, tipoIcone);
+        iconContainer.getStyle().set("position", "absolute");
+        iconContainer.getStyle().set("top", "20px");
+        iconContainer.getStyle().set("right", "20px");
         
-        add(iconContainer, tituloH3, valorSpan);
-        setAlignItems(Alignment.START);
+        String[] partes = valor.split(" ", 2);
+        String numero = partes[0];
+        String textoDescricao = partes.length > 1 ? partes[1] : descricao;
+        
+        Span numeroSpan = new Span(numero);
+        numeroSpan.getStyle().set("font-size", "32px");
+        numeroSpan.getStyle().set("font-weight", "700");
+        numeroSpan.getStyle().set("color", "#111827");
+        numeroSpan.getStyle().set("line-height", "1");
+        numeroSpan.getStyle().set("margin", "16px 0 8px");
+        
+        Span descricaoSpan = new Span(textoDescricao);
+        descricaoSpan.getStyle().set("font-size", "14px");
+        descricaoSpan.getStyle().set("color", "#6B7280");
+        descricaoSpan.getStyle().set("margin", "0");
+        
+        VerticalLayout contentLayout = new VerticalLayout();
+        contentLayout.setPadding(false);
+        contentLayout.setSpacing(false);
+        contentLayout.add(tituloH3, numeroSpan, descricaoSpan);
+        
+        add(contentLayout, iconContainer);
+        setAlignItems(FlexComponent.Alignment.START);
     }
     
     private Div criarIcone(String cor, String tipoIcone) {
         Div icon = new Div();
-        icon.getStyle().set("width", "48px");
-        icon.getStyle().set("height", "48px");
+        icon.getStyle().set("width", "40px");
+        icon.getStyle().set("height", "40px");
         icon.getStyle().set("background", getCorFundo(tipoIcone));
-        icon.getStyle().set("border-radius", "12px");
+        icon.getStyle().set("border-radius", "8px");
         icon.getStyle().set("display", "flex");
         icon.getStyle().set("align-items", "center");
         icon.getStyle().set("justify-content", "center");
-        icon.getStyle().set("margin-bottom", "12px");
         
-        com.vaadin.flow.dom.Element svg = new com.vaadin.flow.dom.Element("svg");
-        svg.setAttribute("width", "24");
-        svg.setAttribute("height", "24");
-        svg.setAttribute("viewBox", "0 0 24 24");
-        svg.setAttribute("fill", "none");
-        svg.getStyle().set("stroke", cor);
-        svg.getStyle().set("stroke-width", "2");
-        svg.getStyle().set("stroke-linecap", "round");
-        svg.getStyle().set("stroke-linejoin", "round");
+        String svgContent = criarSvgContent(cor, tipoIcone);
+        icon.getElement().setProperty("innerHTML", svgContent);
         
-        String pathData = getSvgPath(tipoIcone);
-        if (!pathData.isEmpty()) {
-            com.vaadin.flow.dom.Element path = new com.vaadin.flow.dom.Element("path");
-            path.setAttribute("d", pathData);
-            svg.appendChild(path);
-        }
-        
-        icon.getElement().appendChild(svg);
         return icon;
+    }
+    
+    private String criarSvgContent(String cor, String tipoIcone) {
+        String pathData = getSvgPath(tipoIcone);
+        if (pathData.isEmpty()) return "";
+        
+        return "<svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" " +
+                "style=\"stroke: " + cor + "; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;\">" +
+                "<path d=\"" + pathData + "\"></path>" +
+                "</svg>";
     }
     
     private String getCorFundo(String tipoIcone) {

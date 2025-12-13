@@ -13,7 +13,6 @@ public class ConsultaService {
         this.consultaRepository = consultaRepository;
     }
 
-    // ========= Agendamento =========
     public Consulta agendarConsulta(Consulta consulta) {
         List<Consulta> consultasNoDia = consultaRepository.buscarPorData(consulta.getDataConsulta());
 
@@ -23,7 +22,6 @@ public class ConsultaService {
             c.getStatus() == Consulta.StatusConsulta.AGENDADA
         );
 
-        // regra: urgência pode sobrescrever rotina
         if (ocupado && consulta.getTipo() != Consulta.TipoConsulta.URGENCIA) {
             throw new IllegalStateException("Horário já ocupado para este médico.");
         }
@@ -32,7 +30,6 @@ public class ConsultaService {
         return consultaRepository.salvar(consulta);
     }
 
-    // ========= Cancelamento =========
     public void cancelarConsulta(Consulta consulta, LocalDate dataAtual, LocalTime horaAtual) {
         Duration diferenca = Duration.between(
             horaAtual.atDate(dataAtual),
@@ -51,7 +48,6 @@ public class ConsultaService {
         }
     }
 
-    // ========= Reagendamento =========
     public Consulta reagendarConsulta(Consulta consulta, LocalTime novoHorario) {
         List<Consulta> consultasNoDia = consultaRepository.buscarPorData(consulta.getDataConsulta());
 
