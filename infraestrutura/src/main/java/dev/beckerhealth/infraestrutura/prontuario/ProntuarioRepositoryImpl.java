@@ -1,5 +1,7 @@
 package dev.beckerhealth.infraestrutura.prontuario;
 
+import dev.beckerhealth.aplicacao.prontuario.ProntuarioRepositorioAplicacao;
+import dev.beckerhealth.aplicacao.prontuario.dto.ProntuarioResumo;
 import dev.beckerhealth.dominio.prontuario.Prontuario;
 import dev.beckerhealth.dominio.prontuario.ProntuarioRepository;
 import dev.beckerhealth.infraestrutura.persistencia.jpa.JpaMapeador;
@@ -15,7 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-public class ProntuarioRepositoryImpl implements ProntuarioRepository {
+public class ProntuarioRepositoryImpl implements ProntuarioRepository, ProntuarioRepositorioAplicacao {
     @Autowired
     ProntuarioJpaRepository repositorio;
 
@@ -67,6 +69,44 @@ public class ProntuarioRepositoryImpl implements ProntuarioRepository {
     @Override
     public void deletar(Long id) {
         repositorio.deleteById(id);
+    }
+
+    // Implementação de ProntuarioRepositorioAplicacao
+    @Override
+    public List<ProntuarioResumo> pesquisarResumos() {
+        return repositorio.findAll().stream()
+                .map(this::mapearParaResumo)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProntuarioResumo> pesquisarResumosPorPaciente(Long pacienteId) {
+        return repositorio.findByPacienteId(pacienteId).stream()
+                .map(this::mapearParaResumo)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProntuarioResumo> pesquisarResumosPorMedico(Long medicoId) {
+        return repositorio.findByMedicoResponsavelId(medicoId).stream()
+                .map(this::mapearParaResumo)
+                .collect(Collectors.toList());
+    }
+
+    private ProntuarioResumo mapearParaResumo(ProntuarioJpa prontuarioJpa) {
+        return ProntuarioResumo.builder()
+                .id(prontuarioJpa.id)
+                .pacienteNome(prontuarioJpa.paciente != null ? prontuarioJpa.paciente.nome : null)
+                .pacienteCpf(prontuarioJpa.paciente != null ? prontuarioJpa.paciente.cpf : null)
+                .medicoNome(prontuarioJpa.medicoResponsavel != null ? prontuarioJpa.medicoResponsavel.nome : null)
+                .medicoEspecialidade(prontuarioJpa.medicoResponsavel != null ? prontuarioJpa.medicoResponsavel.especialidade : null)
+                .anamnese(prontuarioJpa.anamnese)
+                .diagnostico(prontuarioJpa.diagnostico)
+                .prescricao(prontuarioJpa.prescricao)
+                .dataAtendimento(prontuarioJpa.dataAtendimento)
+                .tipoAtendimento(prontuarioJpa.tipoAtendimento != null ? prontuarioJpa.tipoAtendimento.name() : null)
+                .observacoes(prontuarioJpa.observacoes)
+                .build();
     }
 }
 

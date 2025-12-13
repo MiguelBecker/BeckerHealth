@@ -92,6 +92,17 @@ public class ConsultaRepositoryImpl implements ConsultaRepository, ConsultaRepos
     }
 
     @Override
+    public List<ConsultaResumo> pesquisarResumosPorMedico(Long medicoId) {
+        if (medicoId == null) {
+            return List.of();
+        }
+        return repositorio.findByMedicoId(medicoId).stream()
+                .filter(c -> c.status == ConsultaJpa.StatusConsulta.AGENDADA) // Filtrar apenas consultas agendadas
+                .map(this::mapearParaResumo)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<ConsultaResumoExpandido> pesquisarResumosExpandidos() {
         return repositorio.findAll().stream()
                 .map(this::mapearParaResumoExpandido)

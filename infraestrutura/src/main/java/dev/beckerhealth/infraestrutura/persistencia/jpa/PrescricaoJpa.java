@@ -24,3 +24,4 @@ public class PrescricaoJpa {
     public String assinaturaMedica;
 }
 
+

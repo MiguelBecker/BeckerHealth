@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import dev.beckerhealth.aplicacao.consultas.ConsultaRepositorioAplicacao;
 import dev.beckerhealth.aplicacao.consultas.ConsultaServicoAplicacao;
 import dev.beckerhealth.aplicacao.consultas.processamento.ProcessamentoConsultaAgendada;
+import dev.beckerhealth.aplicacao.prontuario.ProntuarioRepositorioAplicacao;
+import dev.beckerhealth.aplicacao.prontuario.ProntuarioServicoAplicacao;
 import dev.beckerhealth.dominio.compartilhado.evento.EventoBarramento;
 
 @SpringBootApplication(scanBasePackages = {
@@ -34,6 +36,11 @@ public class BeckerHealthApplication {
     @Primary
     public ProcessamentoConsultaAgendada processamentoConsultaAgendada(EventoBarramento eventoBarramento) {
         return new ProcessamentoConsultaAgendada(eventoBarramento);
+    }
+
+    @Bean
+    public ProntuarioServicoAplicacao prontuarioServicoAplicacao(ProntuarioRepositorioAplicacao repositorio) {
+        return new ProntuarioServicoAplicacao(repositorio);
     }
 
     public static void main(String[] args) {

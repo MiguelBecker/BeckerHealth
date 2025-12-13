@@ -8,6 +8,8 @@ import java.util.List;
 public interface ConsultaRepositorioAplicacao {
     List<ConsultaResumo> pesquisarResumos();
 
+    List<ConsultaResumo> pesquisarResumosPorMedico(Long medicoId);
+
     List<ConsultaResumoExpandido> pesquisarResumosExpandidos();
 }
 

@@ -1,7 +1,6 @@
 package dev.beckerhealth.aplicacao.prontuario;
 
-import dev.beckerhealth.dominio.compartilhado.usuario.Medico;
-import dev.beckerhealth.dominio.compartilhado.usuario.Paciente;
+import dev.beckerhealth.aplicacao.prontuario.dto.ProntuarioResumo;
 import dev.beckerhealth.dominio.consultas.Consulta;
 import dev.beckerhealth.dominio.consultas.ConsultaId;
 import dev.beckerhealth.dominio.consultas.ConsultaRepository;
@@ -23,14 +22,19 @@ public class RegistrarProntuario {
         this.consultaRepository = consultaRepository;
     }
 
-    public Prontuario executar(Long consultaId, Long medicoId, String anamnese, 
-                               String diagnostico, String observacoes) {
+    public ProntuarioResumo executar(Long consultaId, Long medicoId, String anamnese, 
+                                     String diagnostico, String prescricao, String observacoes) {
+        // Validar parâmetros
+        if (consultaId == null) {
+            throw new IllegalArgumentException("ID da consulta não pode ser nulo");
+        }
+        
         // Buscar consulta
         Consulta consulta = consultaRepository.buscarPorId(new ConsultaId(consultaId))
-                .orElseThrow(() -> new IllegalArgumentException("Consulta não encontrada"));
+                .orElseThrow(() -> new IllegalArgumentException("Consulta não encontrada com ID: " + consultaId));
 
         // Validar que o médico é o responsável pela consulta
-        if (!consulta.getMedico().getId().equals(medicoId)) {
+        if (medicoId != null && consulta.getMedico() != null && !consulta.getMedico().getId().equals(medicoId)) {
             throw new IllegalStateException("Apenas o médico responsável pela consulta pode registrar o prontuário");
         }
 
@@ -40,11 +44,14 @@ public class RegistrarProntuario {
         prontuario.setMedicoResponsavel(consulta.getMedico());
         prontuario.setAnamnese(anamnese);
         prontuario.setDiagnostico(diagnostico);
+        prontuario.setPrescricao(prescricao);
         prontuario.setObservacoes(observacoes);
         prontuario.setDataAtendimento(LocalDateTime.now());
         prontuario.setTipoAtendimento(mapTipoConsulta(consulta.getTipo()));
 
-        return prontuarioRepository.salvar(prontuario);
+        Prontuario prontuarioSalvo = prontuarioRepository.salvar(prontuario);
+
+        return mapearParaResumo(prontuarioSalvo);
     }
 
     private TipoAtendimento mapTipoConsulta(Consulta.TipoConsulta tipo) {
@@ -53,6 +60,23 @@ public class RegistrarProntuario {
             case RETORNO -> TipoAtendimento.RETORNO;
             case URGENCIA -> TipoAtendimento.URGENCIA;
         };
+    }
+
+    private ProntuarioResumo mapearParaResumo(Prontuario prontuario) {
+        return ProntuarioResumo.builder()
+                .id(prontuario.getId())
+                .pacienteNome(prontuario.getPaciente() != null ? prontuario.getPaciente().getNome() : null)
+                .pacienteCpf(prontuario.getPaciente() != null && prontuario.getPaciente().getCpf() != null 
+                        ? prontuario.getPaciente().getCpf().getCodigo() : null)
+                .medicoNome(prontuario.getMedicoResponsavel() != null ? prontuario.getMedicoResponsavel().getNome() : null)
+                .medicoEspecialidade(prontuario.getMedicoResponsavel() != null ? prontuario.getMedicoResponsavel().getEspecialidade() : null)
+                .anamnese(prontuario.getAnamnese())
+                .diagnostico(prontuario.getDiagnostico())
+                .prescricao(prontuario.getPrescricao())
+                .dataAtendimento(prontuario.getDataAtendimento())
+                .tipoAtendimento(prontuario.getTipoAtendimento() != null ? prontuario.getTipoAtendimento().name() : null)
+                .observacoes(prontuario.getObservacoes())
+                .build();
     }
 }
 

@@ -23,3 +23,4 @@ public class MedicoDTO {
     public void setEspecialidade(String especialidade) { this.especialidade = especialidade; }
 }
 
+

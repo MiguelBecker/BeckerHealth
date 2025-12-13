@@ -17,3 +17,4 @@ public interface PrescricaoJpaRepository extends JpaRepository<PrescricaoJpa, Lo
     List<PrescricaoJpa> findValidasByPacienteId(@Param("pacienteId") Long pacienteId, @Param("hoje") LocalDate hoje);
 }
 
+

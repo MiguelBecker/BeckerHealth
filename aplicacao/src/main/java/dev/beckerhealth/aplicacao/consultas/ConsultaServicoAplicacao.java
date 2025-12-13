@@ -19,6 +19,11 @@ public class ConsultaServicoAplicacao {
         return repositorio.pesquisarResumos();
     }
 
+    public List<ConsultaResumo> pesquisarResumosPorMedico(Long medicoId) {
+        notNull(medicoId, "O ID do médico não pode ser nulo");
+        return repositorio.pesquisarResumosPorMedico(medicoId);
+    }
+
     public List<ConsultaResumoExpandido> pesquisarResumosExpandidos() {
         return repositorio.pesquisarResumosExpandidos();
     }

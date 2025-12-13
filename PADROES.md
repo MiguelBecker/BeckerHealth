@@ -560,3 +560,4 @@ O projeto BeckerHealth implementa uma arquitetura robusta baseada em DDD e Clean
 - **Qualidade** através dos princípios SOLID
 
 Esta abordagem garante que o sistema possa evoluir de forma sustentável, mantendo a complexidade controlada mesmo com o crescimento do projeto.
+
