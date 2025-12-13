@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-BeckerHealthApplication<apresentacao-vaadin>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "dev.beckerhealth.apresentacao.vaadin.BeckerHealthApplication",
+            "projectName": "apresentacao-vaadin",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
