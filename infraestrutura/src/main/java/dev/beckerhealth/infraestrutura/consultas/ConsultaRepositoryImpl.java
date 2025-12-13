@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-class ConsultaRepositoryImpl implements ConsultaRepository, ConsultaRepositorioAplicacao {
+public class ConsultaRepositoryImpl implements ConsultaRepository, ConsultaRepositorioAplicacao {
     @Autowired
     ConsultaJpaRepository repositorio;
 

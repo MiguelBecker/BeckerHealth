@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-class NotificacaoRepositoryImpl implements NotificacaoRepository {
+public class NotificacaoRepositoryImpl implements NotificacaoRepository {
     @Autowired
     NotificacaoJpaRepository repositorio;
 

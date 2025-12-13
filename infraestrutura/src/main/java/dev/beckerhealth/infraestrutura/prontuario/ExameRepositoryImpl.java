@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-class ExameRepositoryImpl implements ExameRepository {
+public class ExameRepositoryImpl implements ExameRepository {
     @Autowired
     ExameJpaRepository repositorio;
 

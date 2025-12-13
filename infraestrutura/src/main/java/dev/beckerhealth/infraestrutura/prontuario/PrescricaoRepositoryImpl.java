@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-class PrescricaoRepositoryImpl implements PrescricaoRepository {
+public class PrescricaoRepositoryImpl implements PrescricaoRepository {
     @Autowired
     PrescricaoJpaRepository repositorio;
 

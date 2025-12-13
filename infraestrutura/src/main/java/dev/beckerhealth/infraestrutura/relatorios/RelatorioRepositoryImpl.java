@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-class RelatorioRepositoryImpl implements RelatorioRepository {
+public class RelatorioRepositoryImpl implements RelatorioRepository {
     @Autowired
     RelatorioJpaRepository repositorio;
 
