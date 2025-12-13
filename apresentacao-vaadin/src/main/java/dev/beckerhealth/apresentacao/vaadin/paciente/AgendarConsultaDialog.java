@@ -6,6 +6,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -22,6 +23,7 @@ import java.util.List;
 public class AgendarConsultaDialog extends Dialog {
     
     private final AgendarConsulta agendarConsulta;
+    private final ConsultaApiClient apiClient;
     private final Long pacienteId;
     private final String pacienteNome;
     
@@ -33,17 +35,15 @@ public class AgendarConsultaDialog extends Dialog {
     private TimePicker horaField;
     private Button confirmarButton;
     
-    public AgendarConsultaDialog(AgendarConsulta agendarConsulta, 
-                                 Long pacienteId,
-                                 String pacienteNome) {
+    public AgendarConsultaDialog(AgendarConsulta agendarConsulta, Long pacienteId, String pacienteNome) {
         this.agendarConsulta = agendarConsulta;
+        this.apiClient = new ConsultaApiClient();
         this.pacienteId = pacienteId;
         this.pacienteNome = pacienteNome;
         
         setWidth("700px");
         setMaxWidth("90vw");
         setMaxHeight("90vh");
-        getStyle().set("border-radius", "12px");
         setHeaderTitle("Agendar Consulta");
         
         criarConteudo();
@@ -79,13 +79,16 @@ public class AgendarConsultaDialog extends Dialog {
         horaField.setWidthFull();
         horaField.getStyle().set("margin-bottom", "8px");
         
-        List<MedicoDTO> medicos = List.of(
-            new MedicoDTO(1L, "Dr. João Santos", "Cardiologia"),
-            new MedicoDTO(2L, "Dra. Ana Paula", "Dermatologia"),
-            new MedicoDTO(3L, "Dr. Carlos Silva", "Ortopedia"),
-            new MedicoDTO(4L, "Dra. Maria Costa", "Pediatria"),
-            new MedicoDTO(5L, "Dr. Roberto Lima", "Clínico Geral")
-        );
+        // Buscar médicos do backend
+        List<MedicoDTO> medicos = apiClient.buscarMedicos();
+        if (medicos.isEmpty()) {
+            // Fallback para dados de teste caso backend não esteja disponível
+            medicos = List.of(
+                new MedicoDTO(2L, "Dr. João Silva", "Cardiologia"),
+                new MedicoDTO(3L, "Dra. Maria Santos", "Pediatria")
+            );
+        }
+        
         medicoSelect = new Select<>();
         medicoSelect.setLabel("Médico");
         medicoSelect.setItems(medicos);
@@ -176,20 +179,33 @@ public class AgendarConsultaDialog extends Dialog {
                 LocalDate data = dataField.getValue();
                 LocalTime hora = horaField.getValue();
                 
-                agendarConsulta.executar(
-                    pacienteId,
-                    medico.getId(),
-                    data,
-                    hora,
-                    Consulta.TipoConsulta.ROTINA
-                );
+                // Usar o serviço diretamente se disponível, senão tenta API
+                if (agendarConsulta != null) {
+                    agendarConsulta.executar(
+                        pacienteId,
+                        medico.getId(),
+                        data,
+                        hora,
+                        Consulta.TipoConsulta.ROTINA
+                    );
+                } else {
+                    apiClient.agendarConsulta(
+                        pacienteId,
+                        medico.getId(),
+                        data,
+                        hora,
+                        Consulta.TipoConsulta.ROTINA
+                    );
+                }
                 
+                Notification.show("Consulta agendada com sucesso!", 3000, Notification.Position.TOP_CENTER);
                 close();
                 getUI().ifPresent(ui -> {
                     ui.getPage().executeJs("setTimeout(() => window.location.reload(), 300);");
                 });
             } catch (Exception e) {
                 e.printStackTrace();
+                Notification.show("Erro ao agendar consulta: " + e.getMessage(), 5000, Notification.Position.TOP_CENTER);
             }
         }
     }

@@ -23,16 +23,16 @@ import java.util.List;
 public class DashboardPacienteView extends VerticalLayout {
     
     private final ConsultaServicoAplicacao consultaServicoAplicacao;
-    private final AgendarConsulta agendarConsulta;
     private final ConsultaRepository consultaRepository;
+    private final AgendarConsulta agendarConsulta;
     private VerticalLayout conteudoLayout;
     
     public DashboardPacienteView(ConsultaServicoAplicacao consultaServicoAplicacao,
-                                 AgendarConsulta agendarConsulta,
-                                 ConsultaRepository consultaRepository) {
+                                 ConsultaRepository consultaRepository,
+                                 AgendarConsulta agendarConsulta) {
         this.consultaServicoAplicacao = consultaServicoAplicacao;
-        this.agendarConsulta = agendarConsulta;
         this.consultaRepository = consultaRepository;
+        this.agendarConsulta = agendarConsulta;
         setPadding(false);
         setSpacing(false);
         setSizeFull();
@@ -160,8 +160,8 @@ public class DashboardPacienteView extends VerticalLayout {
             getUI().ifPresent(ui -> {
                 AgendarConsultaDialog dialog = new AgendarConsultaDialog(
                     agendarConsulta,
-                    1L, // TODO: Pegar ID do paciente logado
-                    "Maria Silva" // TODO: Pegar nome do paciente logado
+                    4L, // ID do paciente do teste (Carlos Oliveira)
+                    "Carlos Oliveira" // Nome do paciente do teste
                 );
                 dialog.open();
             });

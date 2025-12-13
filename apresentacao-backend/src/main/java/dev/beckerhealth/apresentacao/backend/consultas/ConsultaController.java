@@ -10,11 +10,13 @@ import dev.beckerhealth.dominio.consultas.ConsultaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/consultas")
+@CrossOrigin(origins = "*")
 public class ConsultaController {
 
     private final ConsultaRepository consultaRepository;
