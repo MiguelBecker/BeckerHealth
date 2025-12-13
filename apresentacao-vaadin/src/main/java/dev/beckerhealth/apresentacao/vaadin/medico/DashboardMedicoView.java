@@ -1,7 +1,9 @@
 package dev.beckerhealth.apresentacao.vaadin.medico;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -306,34 +308,17 @@ public class DashboardMedicoView extends VerticalLayout {
         titulo.getStyle().set("font-weight", "600");
         titulo.getStyle().set("color", "#111827");
         
-        Div novoRegistro = new Div();
+        Button novoRegistro = new Button("+ Novo Registro");
         novoRegistro.getStyle().set("background", "#3B82F6");
         novoRegistro.getStyle().set("color", "white");
         novoRegistro.getStyle().set("border", "none");
-        novoRegistro.getStyle().set("border-radius", "8px");
-        novoRegistro.getStyle().set("padding", "10px 20px");
+        novoRegistro.getStyle().set("border-radius", "10px");
+        novoRegistro.getStyle().set("padding", "12px 24px");
         novoRegistro.getStyle().set("font-size", "14px");
         novoRegistro.getStyle().set("font-weight", "600");
         novoRegistro.getStyle().set("cursor", "pointer");
-        novoRegistro.getStyle().set("display", "inline-flex");
-        novoRegistro.getStyle().set("align-items", "center");
-        novoRegistro.getStyle().set("gap", "8px");
-        novoRegistro.getStyle().set("user-select", "none");
-        
-        // Criar ícone SVG
-        Div iconDiv = new Div();
-        String svgContent = "<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" " +
-                "style=\"stroke: white; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;\">" +
-                "<path d=\"M12 5v14m7-7H5\"></path>" +
-                "</svg>";
-        iconDiv.getElement().setProperty("innerHTML", svgContent);
-        iconDiv.getStyle().set("display", "inline-block");
-        
-        // Criar texto
-        Span texto = new Span("Novo Registro");
-        texto.getStyle().set("color", "white");
-        
-        novoRegistro.add(iconDiv, texto);
+        novoRegistro.getStyle().set("box-shadow", "0 2px 4px rgba(59, 130, 246, 0.3)");
+        novoRegistro.getStyle().set("transition", "all 0.2s ease");
         
         novoRegistro.addClickListener(e -> {
             getUI().ifPresent(ui -> {
@@ -357,10 +342,30 @@ public class DashboardMedicoView extends VerticalLayout {
         List<ProntuarioResumo> prontuarios = prontuarioServicoAplicacao.pesquisarResumos();
         if (prontuarios.isEmpty()) {
             Div empty = new Div();
-            empty.setText("Nenhum prontuário registrado");
-            empty.getStyle().set("padding", "40px");
+            empty.getStyle().set("padding", "60px 40px");
             empty.getStyle().set("text-align", "center");
-            empty.getStyle().set("color", "#6B7280");
+            empty.getStyle().set("background", "#F9FAFB");
+            empty.getStyle().set("border-radius", "12px");
+            empty.getStyle().set("border", "2px dashed #D1D5DB");
+            
+            Span icon = new Span("📋");
+            icon.getStyle().set("font-size", "48px");
+            icon.getStyle().set("display", "block");
+            icon.getStyle().set("margin-bottom", "16px");
+            
+            Span title = new Span("Nenhum prontuário registrado");
+            title.getStyle().set("display", "block");
+            title.getStyle().set("font-size", "18px");
+            title.getStyle().set("font-weight", "600");
+            title.getStyle().set("color", "#374151");
+            title.getStyle().set("margin-bottom", "8px");
+            
+            Span subtitle = new Span("Comece registrando o prontuário de uma consulta");
+            subtitle.getStyle().set("display", "block");
+            subtitle.getStyle().set("font-size", "14px");
+            subtitle.getStyle().set("color", "#6B7280");
+            
+            empty.add(icon, title, subtitle);
             prontuariosLayout.add(empty);
         } else {
             prontuarios.forEach(prontuario -> {
@@ -374,47 +379,159 @@ public class DashboardMedicoView extends VerticalLayout {
     private Div criarCardProntuario(ProntuarioResumo prontuario) {
         Div card = new Div();
         card.getStyle().set("background", "white");
-        card.getStyle().set("border-radius", "12px");
-        card.getStyle().set("padding", "20px");
-        card.getStyle().set("box-shadow", "0 1px 3px rgba(0,0,0,0.1)");
-        card.getStyle().set("margin-bottom", "16px");
+        card.getStyle().set("border-radius", "16px");
+        card.getStyle().set("padding", "24px");
+        card.getStyle().set("box-shadow", "0 2px 8px rgba(0,0,0,0.08)");
+        card.getStyle().set("margin-bottom", "20px");
+        card.getStyle().set("border", "1px solid #E5E7EB");
+        card.getStyle().set("transition", "box-shadow 0.2s ease");
+        card.addClassName("prontuario-card");
         
-        H2 pacienteNome = new H2(prontuario.getPacienteNome() != null ? prontuario.getPacienteNome() : "");
-        pacienteNome.getStyle().set("margin", "0 0 12px");
-        pacienteNome.getStyle().set("font-size", "18px");
-        pacienteNome.getStyle().set("font-weight", "600");
+        // Header do card
+        HorizontalLayout headerLayout = new HorizontalLayout();
+        headerLayout.setWidthFull();
+        headerLayout.setJustifyContentMode(JustifyContentMode.BETWEEN);
+        headerLayout.setAlignItems(Alignment.CENTER);
+        headerLayout.getStyle().set("margin-bottom", "20px");
+        headerLayout.getStyle().set("padding-bottom", "16px");
+        headerLayout.getStyle().set("border-bottom", "2px solid #F3F4F6");
+        
+        VerticalLayout pacienteInfo = new VerticalLayout();
+        pacienteInfo.setPadding(false);
+        pacienteInfo.setSpacing(false);
+        
+        H3 pacienteNome = new H3(prontuario.getPacienteNome() != null ? prontuario.getPacienteNome() : "Paciente");
+        pacienteNome.getStyle().set("margin", "0");
+        pacienteNome.getStyle().set("font-size", "20px");
+        pacienteNome.getStyle().set("font-weight", "700");
         pacienteNome.getStyle().set("color", "#111827");
+        pacienteNome.getStyle().set("letter-spacing", "-0.02em");
         
         Span dataSpan = new Span();
         if (prontuario.getDataAtendimento() != null) {
-            dataSpan.setText("Data: " + prontuario.getDataAtendimento().toLocalDate().toString());
+            String dataFormatada = prontuario.getDataAtendimento().toLocalDate().format(
+                java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            );
+            String horaFormatada = prontuario.getDataAtendimento().toLocalTime().format(
+                java.time.format.DateTimeFormatter.ofPattern("HH:mm")
+            );
+            dataSpan.setText(dataFormatada + " às " + horaFormatada);
         }
         dataSpan.getStyle().set("font-size", "14px");
         dataSpan.getStyle().set("color", "#6B7280");
-        dataSpan.getStyle().set("display", "block");
-        dataSpan.getStyle().set("margin-bottom", "8px");
+        dataSpan.getStyle().set("margin-top", "4px");
         
-        if (prontuario.getDiagnostico() != null && !prontuario.getDiagnostico().isEmpty()) {
-            Span diagnosticoLabel = new Span("Diagnóstico: ");
-            diagnosticoLabel.getStyle().set("font-weight", "600");
+        if (prontuario.getMedicoNome() != null) {
+            Span medicoSpan = new Span("Dr(a). " + prontuario.getMedicoNome());
+            medicoSpan.getStyle().set("font-size", "13px");
+            medicoSpan.getStyle().set("color", "#9CA3AF");
+            medicoSpan.getStyle().set("margin-top", "2px");
+            pacienteInfo.add(pacienteNome, dataSpan, medicoSpan);
+        } else {
+            pacienteInfo.add(pacienteNome, dataSpan);
+        }
+        
+        // Badge de tipo de atendimento
+        if (prontuario.getTipoAtendimento() != null) {
+            Span tipoBadge = new Span(prontuario.getTipoAtendimento());
+            tipoBadge.getStyle().set("background", "#DBEAFE");
+            tipoBadge.getStyle().set("color", "#1E40AF");
+            tipoBadge.getStyle().set("padding", "6px 12px");
+            tipoBadge.getStyle().set("border-radius", "20px");
+            tipoBadge.getStyle().set("font-size", "12px");
+            tipoBadge.getStyle().set("font-weight", "600");
+            tipoBadge.getStyle().set("text-transform", "uppercase");
+            headerLayout.add(pacienteInfo, tipoBadge);
+        } else {
+            headerLayout.add(pacienteInfo);
+        }
+        
+        // Conteúdo principal
+        VerticalLayout conteudoLayout = new VerticalLayout();
+        conteudoLayout.setPadding(false);
+        conteudoLayout.setSpacing(true);
+        conteudoLayout.setWidthFull();
+        
+        // Seção de Diagnóstico
+        if (prontuario.getDiagnostico() != null && !prontuario.getDiagnostico().trim().isEmpty()) {
+            Div diagnosticoSection = new Div();
+            diagnosticoSection.getStyle().set("background", "#FEF3C7");
+            diagnosticoSection.getStyle().set("border-left", "4px solid #F59E0B");
+            diagnosticoSection.getStyle().set("padding", "16px");
+            diagnosticoSection.getStyle().set("border-radius", "8px");
+            diagnosticoSection.getStyle().set("margin-bottom", "12px");
+            
+            Span diagnosticoLabel = new Span("📋 Diagnóstico");
+            diagnosticoLabel.getStyle().set("font-weight", "700");
+            diagnosticoLabel.getStyle().set("font-size", "14px");
+            diagnosticoLabel.getStyle().set("color", "#92400E");
+            diagnosticoLabel.getStyle().set("display", "block");
+            diagnosticoLabel.getStyle().set("margin-bottom", "8px");
+            
             Span diagnostico = new Span(prontuario.getDiagnostico());
             diagnostico.getStyle().set("display", "block");
-            diagnostico.getStyle().set("margin-bottom", "8px");
-            diagnostico.getStyle().set("color", "#374151");
-            card.add(diagnosticoLabel, diagnostico);
+            diagnostico.getStyle().set("color", "#78350F");
+            diagnostico.getStyle().set("font-size", "14px");
+            diagnostico.getStyle().set("line-height", "1.6");
+            
+            diagnosticoSection.add(diagnosticoLabel, diagnostico);
+            conteudoLayout.add(diagnosticoSection);
         }
         
-        if (prontuario.getPrescricao() != null && !prontuario.getPrescricao().isEmpty()) {
-            Span prescricaoLabel = new Span("Prescrição: ");
-            prescricaoLabel.getStyle().set("font-weight", "600");
+        // Seção de Prescrição
+        if (prontuario.getPrescricao() != null && !prontuario.getPrescricao().trim().isEmpty()) {
+            Div prescricaoSection = new Div();
+            prescricaoSection.getStyle().set("background", "#D1FAE5");
+            prescricaoSection.getStyle().set("border-left", "4px solid #10B981");
+            prescricaoSection.getStyle().set("padding", "16px");
+            prescricaoSection.getStyle().set("border-radius", "8px");
+            prescricaoSection.getStyle().set("margin-bottom", "12px");
+            
+            Span prescricaoLabel = new Span("💊 Prescrição");
+            prescricaoLabel.getStyle().set("font-weight", "700");
+            prescricaoLabel.getStyle().set("font-size", "14px");
+            prescricaoLabel.getStyle().set("color", "#065F46");
+            prescricaoLabel.getStyle().set("display", "block");
+            prescricaoLabel.getStyle().set("margin-bottom", "8px");
+            
             Span prescricao = new Span(prontuario.getPrescricao());
             prescricao.getStyle().set("display", "block");
-            prescricao.getStyle().set("margin-bottom", "8px");
-            prescricao.getStyle().set("color", "#374151");
-            card.add(prescricaoLabel, prescricao);
+            prescricao.getStyle().set("color", "#047857");
+            prescricao.getStyle().set("font-size", "14px");
+            prescricao.getStyle().set("line-height", "1.6");
+            prescricao.getStyle().set("white-space", "pre-wrap");
+            
+            prescricaoSection.add(prescricaoLabel, prescricao);
+            conteudoLayout.add(prescricaoSection);
         }
         
-        card.add(pacienteNome, dataSpan);
+        // Seção de Observações (se existir)
+        if (prontuario.getObservacoes() != null && !prontuario.getObservacoes().trim().isEmpty()) {
+            Div obsSection = new Div();
+            obsSection.getStyle().set("background", "#E0E7FF");
+            obsSection.getStyle().set("border-left", "4px solid #6366F1");
+            obsSection.getStyle().set("padding", "16px");
+            obsSection.getStyle().set("border-radius", "8px");
+            
+            Span obsLabel = new Span("📝 Observações");
+            obsLabel.getStyle().set("font-weight", "700");
+            obsLabel.getStyle().set("font-size", "14px");
+            obsLabel.getStyle().set("color", "#3730A3");
+            obsLabel.getStyle().set("display", "block");
+            obsLabel.getStyle().set("margin-bottom", "8px");
+            
+            Span observacoes = new Span(prontuario.getObservacoes());
+            observacoes.getStyle().set("display", "block");
+            observacoes.getStyle().set("color", "#4338CA");
+            observacoes.getStyle().set("font-size", "14px");
+            observacoes.getStyle().set("line-height", "1.6");
+            observacoes.getStyle().set("white-space", "pre-wrap");
+            
+            obsSection.add(obsLabel, observacoes);
+            conteudoLayout.add(obsSection);
+        }
+        
+        card.add(headerLayout, conteudoLayout);
         
         return card;
     }
