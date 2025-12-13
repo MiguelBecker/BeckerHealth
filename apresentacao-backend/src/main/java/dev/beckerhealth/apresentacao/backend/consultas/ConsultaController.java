@@ -7,7 +7,6 @@ import dev.beckerhealth.aplicacao.consultas.dto.ConsultaResumoExpandido;
 import dev.beckerhealth.dominio.consultas.Consulta;
 import dev.beckerhealth.dominio.consultas.ConsultaId;
 import dev.beckerhealth.dominio.consultas.ConsultaRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,12 +15,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/consultas")
-@RequiredArgsConstructor
 public class ConsultaController {
 
     private final ConsultaRepository consultaRepository;
     private final ConsultaServicoAplicacao consultaServicoAplicacao;
     private final AgendarConsulta agendarConsulta;
+
+    public ConsultaController(ConsultaRepository consultaRepository, ConsultaServicoAplicacao consultaServicoAplicacao, AgendarConsulta agendarConsulta) {
+        this.consultaRepository = consultaRepository;
+        this.consultaServicoAplicacao = consultaServicoAplicacao;
+        this.agendarConsulta = agendarConsulta;
+    }
 
     @GetMapping
     public List<ConsultaResumo> listarTodas() {
