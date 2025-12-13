@@ -4,53 +4,48 @@ import jakarta.persistence.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "notificacoes")
-class NotificacaoJpa {
+public class NotificacaoJpa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    public Long id;
 
     @ManyToOne(optional = false)
-    UsuarioJpa destinatario;
+    public UsuarioJpa destinatario;
 
     @Column(nullable = false, length = 200)
-    String titulo;
+    public String titulo;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    String mensagem;
+    public String mensagem;
 
     @Column(nullable = false)
-    LocalDateTime dataEnvio;
+    public LocalDateTime dataEnvio;
 
-    LocalDateTime dataLeitura;
+    public LocalDateTime dataLeitura;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    TipoNotificacao tipo;
+    public TipoNotificacao tipo;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    StatusNotificacao status;
+    public StatusNotificacao status;
 
     @Column(length = 500)
-    String link;
+    public String link;
 
-    enum TipoNotificacao {
+    public enum TipoNotificacao {
         CONSULTA_AGENDADA, CONSULTA_CANCELADA, CONSULTA_REMARCADA,
         RESULTADO_EXAME, PRESCRICAO, LEMBRETE, ALERTA
     }
 
-    enum StatusNotificacao {
+    public enum StatusNotificacao {
         NAO_LIDA, LIDA, ARQUIVADA
     }
-}
 
-interface NotificacaoJpaRepository extends JpaRepository<NotificacaoJpa, Long> {
-    List<NotificacaoJpa> findByDestinatarioId(Long usuarioId);
-    List<NotificacaoJpa> findByDestinatarioIdAndStatus(Long usuarioId, StatusNotificacao status);
-    List<NotificacaoJpa> findByTipo(TipoNotificacao tipo);
-    List<NotificacaoJpa> findByDataEnvioBetween(java.time.LocalDateTime dataInicio, java.time.LocalDateTime dataFim);
 }
 

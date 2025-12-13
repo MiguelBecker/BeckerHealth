@@ -50,6 +50,13 @@ public class FakeNotificacaoRepository implements NotificacaoRepository {
     }
 
     @Override
+    public List<Notificacao> buscarPorTipo(Notificacao.TipoNotificacao tipo) {
+        return banco.values().stream()
+                .filter(n -> n.getTipo() == tipo)
+                .toList();
+    }
+
+    @Override
     public void deletar(Long id) {
         banco.remove(id);
     }

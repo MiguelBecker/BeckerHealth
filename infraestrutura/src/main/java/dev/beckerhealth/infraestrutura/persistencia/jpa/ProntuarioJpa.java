@@ -4,47 +4,43 @@ import jakarta.persistence.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "prontuarios")
-class ProntuarioJpa {
+public class ProntuarioJpa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    public Long id;
 
     @ManyToOne(optional = false)
-    PacienteJpa paciente;
+    public PacienteJpa paciente;
 
     @ManyToOne
-    MedicoJpa medicoResponsavel;
+    public MedicoJpa medicoResponsavel;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    String anamnese;
+    public String anamnese;
 
     @Column(columnDefinition = "TEXT")
-    String diagnostico;
+    public String diagnostico;
 
     @Column(columnDefinition = "TEXT")
-    String prescricao;
+    public String prescricao;
 
     @Column(nullable = false)
-    LocalDateTime dataAtendimento;
+    public LocalDateTime dataAtendimento;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    TipoAtendimento tipoAtendimento;
+    public TipoAtendimento tipoAtendimento;
 
     @Column(length = 500)
-    String observacoes;
+    public String observacoes;
 
-    enum TipoAtendimento {
+    public enum TipoAtendimento {
         CONSULTA, RETORNO, URGENCIA, EMERGENCIA
     }
-}
 
-interface ProntuarioJpaRepository extends JpaRepository<ProntuarioJpa, Long> {
-    List<ProntuarioJpa> findByPacienteId(Long pacienteId);
-    List<ProntuarioJpa> findByMedicoResponsavelId(Long medicoId);
-    List<ProntuarioJpa> findByDataAtendimentoBetween(java.time.LocalDateTime dataInicio, java.time.LocalDateTime dataFim);
 }
 

@@ -14,13 +14,5 @@ public interface UsuarioRepositoryJpa extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByEmail(String email);
 }
 
-@Repository
-public interface MedicoRepositoryJpa extends JpaRepository<Medico, Long> {
-    Optional<Medico> findByCrm(String crm);
-}
-
-@Repository
-public interface PacienteRepositoryJpa extends JpaRepository<Paciente, Long> {
-    Optional<Paciente> findByCpf(String cpf);
-}
+// MedicoRepositoryJpa and PacienteRepositoryJpa are declared in their own files
 

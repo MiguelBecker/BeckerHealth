@@ -7,12 +7,12 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "pacientes")
 @PrimaryKeyJoinColumn(name = "usuario_id")
-class PacienteJpa extends UsuarioJpa {
+public class PacienteJpa extends UsuarioJpa {
     @Column(unique = true, nullable = false, length = 14)
-    String cpf;
+    public String cpf;
 
-    LocalDate dataNascimento;
+    public LocalDate dataNascimento;
 
-    String convenio;
+    public String convenio;
 }
 

@@ -116,23 +116,23 @@ class ConsultaRepositoryImpl implements ConsultaRepository, ConsultaRepositorioA
     }
 
     private ConsultaResumoExpandido mapearParaResumoExpandido(ConsultaJpa consultaJpa) {
-        return ConsultaResumoExpandido.builder()
-                .id(consultaJpa.id)
-                .pacienteId(consultaJpa.paciente != null ? consultaJpa.paciente.id : null)
-                .pacienteNome(consultaJpa.paciente != null ? consultaJpa.paciente.nome : null)
-                .pacienteCpf(consultaJpa.paciente != null ? consultaJpa.paciente.cpf : null)
-                .pacienteEmail(consultaJpa.paciente != null ? consultaJpa.paciente.email : null)
-                .pacienteConvenio(consultaJpa.paciente != null ? consultaJpa.paciente.convenio : null)
-                .medicoId(consultaJpa.medico != null ? consultaJpa.medico.id : null)
-                .medicoNome(consultaJpa.medico != null ? consultaJpa.medico.nome : null)
-                .medicoCrm(consultaJpa.medico != null ? consultaJpa.medico.crm : null)
-                .medicoEspecialidade(consultaJpa.medico != null ? consultaJpa.medico.especialidade : null)
-                .medicoEmail(consultaJpa.medico != null ? consultaJpa.medico.email : null)
-                .dataConsulta(consultaJpa.dataConsulta)
-                .horaConsulta(consultaJpa.horaConsulta)
-                .tipo(consultaJpa.tipo != null ? consultaJpa.tipo.name() : null)
-                .status(consultaJpa.status != null ? consultaJpa.status.name() : null)
-                .build();
+        var dto = new ConsultaResumoExpandido();
+        dto.setId(consultaJpa.id);
+        dto.setPacienteId(consultaJpa.paciente != null ? consultaJpa.paciente.id : null);
+        dto.setPacienteNome(consultaJpa.paciente != null ? consultaJpa.paciente.nome : null);
+        dto.setPacienteCpf(consultaJpa.paciente != null ? consultaJpa.paciente.cpf : null);
+        dto.setPacienteEmail(consultaJpa.paciente != null ? consultaJpa.paciente.email : null);
+        dto.setPacienteConvenio(consultaJpa.paciente != null ? consultaJpa.paciente.convenio : null);
+        dto.setMedicoId(consultaJpa.medico != null ? consultaJpa.medico.id : null);
+        dto.setMedicoNome(consultaJpa.medico != null ? consultaJpa.medico.nome : null);
+        dto.setMedicoCrm(consultaJpa.medico != null ? consultaJpa.medico.crm : null);
+        dto.setMedicoEspecialidade(consultaJpa.medico != null ? consultaJpa.medico.especialidade : null);
+        dto.setMedicoEmail(consultaJpa.medico != null ? consultaJpa.medico.email : null);
+        dto.setDataConsulta(consultaJpa.dataConsulta);
+        dto.setHoraConsulta(consultaJpa.horaConsulta);
+        dto.setTipo(consultaJpa.tipo != null ? consultaJpa.tipo.name() : null);
+        dto.setStatus(consultaJpa.status != null ? consultaJpa.status.name() : null);
+        return dto;
     }
 }
 

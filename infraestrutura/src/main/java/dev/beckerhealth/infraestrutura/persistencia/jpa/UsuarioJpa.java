@@ -7,37 +7,28 @@ import org.springframework.stereotype.Repository;
 @Entity
 @Table(name = "usuarios")
 @Inheritance(strategy = InheritanceType.JOINED)
-class UsuarioJpa {
+public class UsuarioJpa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    public Long id;
 
     @Column(unique = true, nullable = false, length = 50)
-    String login;
+    public String login;
 
     @Column(nullable = false)
-    String senha;
+    public String senha;
 
     @Column(nullable = false)
-    String nome;
+    public String nome;
 
-    String email;
+    public String email;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    TipoUsuario tipo;
+    public TipoUsuario tipo;
 
-    enum TipoUsuario {
+    public enum TipoUsuario {
         ADMIN, MEDICO, PACIENTE, RECEPCIONISTA
     }
-}
-
-interface UsuarioJpaRepository extends JpaRepository<UsuarioJpa, Long> {
-}
-
-interface MedicoJpaRepository extends JpaRepository<MedicoJpa, Long> {
-}
-
-interface PacienteJpaRepository extends JpaRepository<PacienteJpa, Long> {
 }
 

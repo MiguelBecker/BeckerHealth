@@ -14,7 +14,7 @@ import dev.beckerhealth.dominio.prontuario.Prontuario;
 import dev.beckerhealth.dominio.relatorios.Relatorio;
 
 @Component
-class JpaMapeador extends ModelMapper {
+public class JpaMapeador extends ModelMapper {
     private CpfFabrica cpfFabrica;
     private CrmFabrica crmFabrica;
     private EmailFabrica emailFabrica;
@@ -348,9 +348,9 @@ class JpaMapeador extends ModelMapper {
             @Override
             protected Relatorio convert(RelatorioJpa source) {
                 if (source == null) return null;
-                var geradoPor = source.geradoPor != null ? map(source.geradoPor, Usuario.class) : null;
-                return new Relatorio(source.id, source.titulo, source.conteudo,
-                        map(source.tipo, Relatorio.TipoRelatorio.class), geradoPor, source.dataGeracao,
+            Long geradoPorId = source.geradoPor != null ? source.geradoPor.id : null;
+            return new Relatorio(source.id, source.titulo, source.conteudo,
+                map(source.tipo, Relatorio.TipoRelatorio.class), geradoPorId, source.dataGeracao,
                         map(source.status, Relatorio.StatusRelatorio.class), source.observacoes);
             }
         });
@@ -364,7 +364,13 @@ class JpaMapeador extends ModelMapper {
                 relatorioJpa.titulo = source.getTitulo();
                 relatorioJpa.conteudo = source.getConteudo();
                 relatorioJpa.tipo = map(source.getTipo(), RelatorioJpa.TipoRelatorio.class);
-                relatorioJpa.geradoPor = source.getGeradoPor() != null ? map(source.getGeradoPor(), UsuarioJpa.class) : null;
+                if (source.getGeradoPorId() != null) {
+                    var usuarioJpa = new UsuarioJpa();
+                    usuarioJpa.id = source.getGeradoPorId();
+                    relatorioJpa.geradoPor = usuarioJpa;
+                } else {
+                    relatorioJpa.geradoPor = null;
+                }
                 relatorioJpa.dataGeracao = source.getDataGeracao();
                 relatorioJpa.status = map(source.getStatus(), RelatorioJpa.StatusRelatorio.class);
                 relatorioJpa.observacoes = source.getObservacoes();

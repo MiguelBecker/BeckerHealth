@@ -1,6 +1,7 @@
 package com.beckerhealth.steps;
 
 import dev.beckerhealth.dominio.consultas.Consulta;
+import dev.beckerhealth.dominio.consultas.ConsultaId;
 import dev.beckerhealth.dominio.consultas.ConsultaRepository;
 import dev.beckerhealth.dominio.consultas.ConsultaService;
 import dev.beckerhealth.dominio.compartilhado.usuario.Medico;
@@ -28,12 +29,12 @@ public class GestaoConsultasSteps {
     public GestaoConsultasSteps() {
         this.consultaRepositoryFake = new ConsultaRepository() {
             private List<Consulta> consultas = new ArrayList<>();
-            private Long idCounter = 1L;
+            private long idCounter = 1L;
 
             @Override
             public Consulta salvar(Consulta consulta) {
                 if (consulta.getId() == null) {
-                    consulta.setId(idCounter++);
+                    consulta.setId(new ConsultaId(idCounter++));
                 }
                 consultas.removeIf(c -> c.getId().equals(consulta.getId()));
                 consultas.add(consulta);
@@ -41,7 +42,7 @@ public class GestaoConsultasSteps {
             }
 
             @Override
-            public Optional<Consulta> buscarPorId(Long id) {
+            public Optional<Consulta> buscarPorId(ConsultaId id) {
                 return consultas.stream().filter(c -> c.getId().equals(id)).findFirst();
             }
 
@@ -79,7 +80,7 @@ public class GestaoConsultasSteps {
             }
 
             @Override
-            public void deletar(Long id) {
+            public void deletar(ConsultaId id) {
                 consultas.removeIf(c -> c.getId().equals(id));
             }
         };
@@ -118,7 +119,7 @@ public class GestaoConsultasSteps {
     @Dado("que o médico já possui uma consulta às {int}:{int}")
     public void medicoJaPossuiConsulta(int hora, int minuto) {
         Consulta consultaExistente = new Consulta();
-        consultaExistente.setId(99L);
+        consultaExistente.setId(new ConsultaId(99L));
         consultaExistente.setMedico(medico);
         consultaExistente.setPaciente(paciente);
         consultaExistente.setDataConsulta(LocalDate.now());
@@ -154,7 +155,7 @@ public class GestaoConsultasSteps {
     @Dado("que o paciente possui uma consulta marcada para daqui a {int} horas")
     public void pacientePossuiConsultaDaquiHoras(int horas) {
         consultaAgendada = new Consulta();
-        consultaAgendada.setId(2L);
+        consultaAgendada.setId(new ConsultaId(2L));
         consultaAgendada.setMedico(medico);
         consultaAgendada.setPaciente(paciente);
         consultaAgendada.setDataConsulta(LocalDate.now());
@@ -188,7 +189,7 @@ public class GestaoConsultasSteps {
     @Dado("que o médico já possui uma consulta de rotina às {int}:{int}")
     public void medicoJaPossuiConsultaDeRotina(int hora, int minuto) {
         Consulta rotina = new Consulta();
-        rotina.setId(3L);
+        rotina.setId(new ConsultaId(3L));
         rotina.setMedico(medico);
         rotina.setPaciente(paciente);
         rotina.setDataConsulta(LocalDate.now());
