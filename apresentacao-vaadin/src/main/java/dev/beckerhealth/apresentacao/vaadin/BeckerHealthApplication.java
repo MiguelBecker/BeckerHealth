@@ -21,7 +21,7 @@ import dev.beckerhealth.dominio.compartilhado.evento.EventoBarramento;
     "dev.beckerhealth.infraestrutura.persistencia.jpa"
 })
 @EnableJpaRepositories(basePackages = {
-    "dev.beckerhealth.infraestrutura"
+    "dev.beckerhealth.infraestrutura.persistencia.jpa"
 })
 public class BeckerHealthApplication {
 
