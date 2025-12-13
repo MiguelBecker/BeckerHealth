@@ -201,8 +201,8 @@ public class DashboardAdminView extends VerticalLayout {
         primeiraLinha.setSpacing(true);
         primeiraLinha.setPadding(false);
         
-        Div chart1 = criarChartCard("Consultas por Dia da Semana", "chart1", "bar");
-        Div chart2 = criarChartCard("Consultas por Tipo", "chart2", "pie");
+        Div chart1 = criarChartCard("Consultas por Dia da Semana", "chart1");
+        Div chart2 = criarChartCard("Consultas por Tipo", "chart2");
         
         primeiraLinha.add(chart1, chart2);
         primeiraLinha.setFlexGrow(1, chart1, chart2);
@@ -213,33 +213,22 @@ public class DashboardAdminView extends VerticalLayout {
         segundaLinha.setSpacing(true);
         segundaLinha.setPadding(false);
         
-        Div chart3 = criarChartCard("Distribuição por Convênio", "chart3", "pie");
-        Div chart4 = criarChartCard("Evolução Mensal", "chart4", "line");
+        Div chart3 = criarChartCard("Distribuição por Convênio", "chart3");
+        Div chart4 = criarChartCard("Evolução Mensal", "chart4");
         
         segundaLinha.add(chart3, chart4);
         segundaLinha.setFlexGrow(1, chart3, chart4);
         
         layout.add(primeiraLinha, segundaLinha);
         
-        // Criar gráficos após o layout ser renderizado
+        // Executar script completo após renderização
         getUI().ifPresent(ui -> {
-            ui.getPage().executeJs(
-                "setTimeout(function() {" +
-                "  if (typeof Chart === 'undefined') {" +
-                "    console.log('Aguardando Chart.js...');" +
-                "    setTimeout(arguments.callee, 200);" +
-                "    return;" +
-                "  }" +
-                "  " + createBarChartScript() + 
-                "  " + createPieChartTipoScript() +
-                "  " + createPieChartConvenioScript() +
-                "  " + createLineChartScript() +
-                "}, 1500);"
-            );
+            String fullScript = criarScriptCompleto() + " setTimeout(function() { window.initChartsAdmin(); }, 1500);";
+            ui.getPage().executeJs(fullScript);
         });
     }
     
-    private Div criarChartCard(String titulo, String chartId, String tipo) {
+    private Div criarChartCard(String titulo, String chartId) {
         Div card = new Div();
         card.getStyle().set("background", "white");
         card.getStyle().set("border-radius", "12px");
@@ -255,30 +244,43 @@ public class DashboardAdminView extends VerticalLayout {
         tituloH2.getStyle().set("color", "#111827");
         
         Div canvasContainer = new Div();
-        canvasContainer.setId(chartId);
+        canvasContainer.setId(chartId + "-container");
         canvasContainer.setWidth("100%");
         canvasContainer.getStyle().set("height", "300px");
-        canvasContainer.getStyle().set("max-height", "300px");
         canvasContainer.getStyle().set("position", "relative");
         
-        // Criar canvas HTML5 diretamente no HTML
-        String canvasHtml = "<canvas id=\"" + chartId + "-canvas\" style=\"width: 100%; height: 300px;\"></canvas>";
+        // Criar canvas via HTML direto
+        String canvasHtml = "<canvas id=\"" + chartId + "-canvas\"></canvas>";
         canvasContainer.getElement().setProperty("innerHTML", canvasHtml);
         
         card.add(tituloH2, canvasContainer);
         return card;
     }
     
-    private String createBarChartScript() {
-        return "var ctx1 = document.getElementById('chart1-canvas');" +
-               "if (ctx1) {" +
-               "  new Chart(ctx1.getContext('2d'), {" +
+    private String criarScriptCompleto() {
+        return "window.initChartsAdmin = function() {" +
+               "  if (typeof Chart === 'undefined') {" +
+               "    setTimeout(window.initChartsAdmin, 200);" +
+               "    return;" +
+               "  }" +
+               "  " +
+               criarGrafico1() + " " +
+               criarGrafico2() + " " +
+               criarGrafico3() + " " +
+               criarGrafico4() +
+               "};";
+    }
+    
+    private String criarGrafico1() {
+        return "var c1 = document.getElementById('chart1-canvas');" +
+               "if (c1) {" +
+               "  new Chart(c1.getContext('2d'), {" +
                "    type: 'bar'," +
                "    data: {" +
                "      labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']," +
                "      datasets: [{" +
                "        label: 'Consultas'," +
-               "        data: [43, 50, 45, 55, 50, 28]," +
+               "        data: [44, 52, 48, 60, 54, 28]," +
                "        backgroundColor: 'rgba(59, 130, 246, 0.8)'," +
                "        borderColor: 'rgba(59, 130, 246, 1)'," +
                "        borderWidth: 1" +
@@ -299,10 +301,10 @@ public class DashboardAdminView extends VerticalLayout {
                "}";
     }
     
-    private String createPieChartTipoScript() {
-        return "var ctx2 = document.getElementById('chart2-canvas');" +
-               "if (ctx2) {" +
-               "  new Chart(ctx2.getContext('2d'), {" +
+    private String criarGrafico2() {
+        return "var c2 = document.getElementById('chart2-canvas');" +
+               "if (c2) {" +
+               "  new Chart(c2.getContext('2d'), {" +
                "    type: 'pie'," +
                "    data: {" +
                "      labels: ['Rotina', 'Retorno', 'Urgência']," +
@@ -323,10 +325,10 @@ public class DashboardAdminView extends VerticalLayout {
                "}";
     }
     
-    private String createPieChartConvenioScript() {
-        return "var ctx3 = document.getElementById('chart3-canvas');" +
-               "if (ctx3) {" +
-               "  new Chart(ctx3.getContext('2d'), {" +
+    private String criarGrafico3() {
+        return "var c3 = document.getElementById('chart3-canvas');" +
+               "if (c3) {" +
+               "  new Chart(c3.getContext('2d'), {" +
                "    type: 'pie'," +
                "    data: {" +
                "      labels: ['Unimed', 'Bradesco Saúde', 'Particular', 'SulAmérica']," +
@@ -347,10 +349,10 @@ public class DashboardAdminView extends VerticalLayout {
                "}";
     }
     
-    private String createLineChartScript() {
-        return "var ctx4 = document.getElementById('chart4-canvas');" +
-               "if (ctx4) {" +
-               "  new Chart(ctx4.getContext('2d'), {" +
+    private String criarGrafico4() {
+        return "var c4 = document.getElementById('chart4-canvas');" +
+               "if (c4) {" +
+               "  new Chart(c4.getContext('2d'), {" +
                "    type: 'line'," +
                "    data: {" +
                "      labels: ['Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out']," +
@@ -364,7 +366,7 @@ public class DashboardAdminView extends VerticalLayout {
                "          tension: 0.4" +
                "        }," +
                "        {" +
-               "          label: 'Receita'," +
+               "          label: 'Receita (mil)'," +
                "          data: [90, 100, 110, 120, 115, 130]," +
                "          borderColor: 'rgba(16, 185, 129, 1)'," +
                "          backgroundColor: 'rgba(16, 185, 129, 0.1)'," +
@@ -378,7 +380,8 @@ public class DashboardAdminView extends VerticalLayout {
                "      maintainAspectRatio: false," +
                "      interaction: { mode: 'index', intersect: false }," +
                "      plugins: {" +
-               "        title: { display: true, text: 'Consultas e receita nos últimos 6 meses' }" +
+               "        title: { display: true, text: 'Consultas e receita nos últimos 6 meses' }," +
+               "        legend: { display: true, position: 'bottom' }" +
                "      }," +
                "      scales: {" +
                "        y: { type: 'linear', display: true, position: 'left', beginAtZero: true, max: 360, ticks: { stepSize: 90 } }," +
@@ -389,4 +392,3 @@ public class DashboardAdminView extends VerticalLayout {
                "}";
     }
 }
-
